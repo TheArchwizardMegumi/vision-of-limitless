@@ -12,11 +12,11 @@ public static class MsgType
     public static string GameWin = nameof(GameWin);
 
     /// <summary>
-    /// ÇÐ»»ÕöÑÛ±ÕÑÛÊ±´¥·¢µÄÊÂ¼þ
+    /// ï¿½Ð»ï¿½ï¿½ï¿½ï¿½Û±ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â¼ï¿½
     /// </summary>
     public static string changeOpenCloseEye = nameof(changeOpenCloseEye);
     /// <summary>
-    /// Íæ¼ÒÊÜÉËÊ±´¥·¢µÄÊÂ¼þ
+    /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â¼ï¿½
     /// </summary>
     public static string playerHert = nameof(playerHert);
 }

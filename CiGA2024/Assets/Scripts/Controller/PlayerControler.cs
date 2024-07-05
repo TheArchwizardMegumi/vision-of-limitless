@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class PlayerControler : MonoBehaviour
 {
-    PlayerState isOpenEye;
+    public PlayerState isOpenEye = PlayerState.Open;
     private void Awake()
     {
         GlobalData.playerControler = this;
@@ -26,11 +26,15 @@ public class PlayerControler : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            ChangeEyeState();
+        }
     }
     
-    public void ChangeEyeType()
+    private void ChangeEyeState()
     {
+        isOpenEye = isOpenEye == PlayerState.Open ? PlayerState.Close : PlayerState.Open;
         Messenger.Broadcast<PlayerState>(MsgType.changeOpenCloseEye, isOpenEye);
     }
 
