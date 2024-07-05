@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class PlayerControler : MonoBehaviour
 {
-    bool isOpenEye;
+    PlayerState isOpenEye;
     private void Awake()
     {
         GlobalData.playerControler = this;
@@ -31,7 +31,7 @@ public class PlayerControler : MonoBehaviour
     
     public void ChangeEyeType()
     {
-        Messenger.Broadcast<bool>(MsgType.changeOpenCloseEye, isOpenEye);
+        Messenger.Broadcast<PlayerState>(MsgType.changeOpenCloseEye, isOpenEye);
     }
 
     private void OnDestroy()

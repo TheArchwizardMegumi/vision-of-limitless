@@ -7,10 +7,10 @@ public class BaseWallController : MonoBehaviour
 {
     private void Awake()
     {
-        Messenger.AddListener<bool>(MsgType.changeOpenCloseEye, OnchangeOpenCloseEye);
+        Messenger.AddListener<PlayerState>(MsgType.changeOpenCloseEye, OnchangeOpenCloseEye);
     }
 
-    protected virtual void OnchangeOpenCloseEye(bool arg1)
+    protected virtual void OnchangeOpenCloseEye(PlayerState arg1)
     {
         
     }
@@ -29,6 +29,6 @@ public class BaseWallController : MonoBehaviour
 
     private void OnDestroy()
     {
-        Messenger.RemoveListener<bool>(MsgType.changeOpenCloseEye, OnchangeOpenCloseEye);
+        Messenger.RemoveListener<PlayerState>(MsgType.changeOpenCloseEye, OnchangeOpenCloseEye);
     }
 }
