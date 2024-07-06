@@ -4,6 +4,6 @@ using UnityEngine;
 
 public class GlobalData : MonoBehaviour
 {
-    public static PlayerControler playerControler;
+    public static PlayerController playerController;
     
 }
