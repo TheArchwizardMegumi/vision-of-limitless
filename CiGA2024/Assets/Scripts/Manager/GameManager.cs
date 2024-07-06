@@ -8,10 +8,10 @@ public class GameManager : Singleton<GameManager>
     public LevelContainer levelContainer;
     int currentLevelIndex = 0;
 
-    void Awake()
-    {
-        base.Awake();
-    }
+    // void Awake()
+    // {
+    //     base.Awake();
+    // }
 
     void Start()
     {
@@ -34,7 +34,6 @@ public class GameManager : Singleton<GameManager>
 
     private void LoadNextLevel()
     {
-        // TODO: 如果关卡都通关了要直接显示通关界面
         if (currentLevelIndex >= levelContainer.levels.Length - 1)
         {
             Debug.Log("No more levels");

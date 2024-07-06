@@ -22,6 +22,11 @@ public class DebugTest : MonoBehaviour
         {
             Messenger.Broadcast(MsgType.playerWin);
         }
+
+        if(Input.GetKeyDown(KeyCode.O))
+        {
+            ScreenCapture.CaptureScreenshot("Assets/screenshot.png");
+        }
         
     }
 }
