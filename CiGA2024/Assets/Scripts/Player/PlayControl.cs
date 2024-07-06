@@ -12,6 +12,7 @@ public class PlayControl : MonoBehaviour
     public float smoothTime;
     public Vector3 position;
     public bool isWalk;
+    Vector2 dir;
     [Header("撞墙相关")]
     public bool touchWall;
     public bool touchUpWall;
@@ -102,7 +103,9 @@ public class PlayControl : MonoBehaviour
         }
 
         if (Input.GetKeyDown(KeyCode.A))
-        {if (isWalk == false&&touchLeftWall==false)
+        {
+            player.localScale = new Vector3(-1, 1, 1);
+            if (isWalk == false&&touchLeftWall==false)
             {   
                 position.x += -1;
                 isWalk = true;
@@ -117,6 +120,7 @@ public class PlayControl : MonoBehaviour
         
         if (Input.GetKeyDown(KeyCode.D))
         {
+            player.localScale = new Vector3(1, 1, 1);
             if (isWalk == false&&touchRightWall==false)
             {
                 position.x += 1;
