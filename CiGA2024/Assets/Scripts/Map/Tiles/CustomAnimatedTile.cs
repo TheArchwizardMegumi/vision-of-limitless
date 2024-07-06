@@ -6,7 +6,7 @@ using UnityEngine.Tilemaps;
 
 [Serializable]
 [CreateAssetMenu(fileName = "CustomAnimatedTile.asset", menuName = "CustomTile")]
-public class CustomAnimatedTile : AnimatedTile
+public class CustomAnimatedTile : RuleTile
 {
     public TileType type;
 }
