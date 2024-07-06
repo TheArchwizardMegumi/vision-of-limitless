@@ -18,5 +18,5 @@ public static class MsgType
     /// <summary>
     /// �������ʱ�������¼�
     /// </summary>
-    public static string playerHert = nameof(playerHert);
+    public static string playerHurt = nameof(playerHurt);
 }

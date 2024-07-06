@@ -4,19 +4,26 @@ using UnityEngine;
 
 public class GameManager : Sington<GameManager>
 {
-    // Start is called before the first frame update
+    void Awake()
+    {
+        DontDestroyOnLoad(this);
+        Messenger.AddListener(MsgType.playerHurt, ReloadLevel);
+    }
+
     void Start()
     {
         
     }
 
-    // Update is called once per frame
     void Update()
     {
         
     }
 
-    
+    public void ReloadLevel()
+    {
+        UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
+    }
 
     public void ExitGame()
     {

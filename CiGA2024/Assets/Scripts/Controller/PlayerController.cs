@@ -8,7 +8,7 @@ public class PlayerController : MonoBehaviour
     private void Awake()
     {
         GlobalData.playerController = this;
-        Messenger.AddListener<float>(MsgType.playerHert, OnPlayerHurt);
+        Messenger.AddListener<float>(MsgType.playerHurt, OnPlayerHurt);
     }
 
     private void OnPlayerHurt(float arg1)
@@ -30,6 +30,6 @@ public class PlayerController : MonoBehaviour
 
     private void OnDestroy()
     {
-        Messenger.RemoveListener<float>(MsgType.playerHert, OnPlayerHurt);
+        Messenger.RemoveListener<float>(MsgType.playerHurt, OnPlayerHurt);
     }
 }
