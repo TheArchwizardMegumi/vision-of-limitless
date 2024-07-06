@@ -7,6 +7,7 @@ namespace UnderCloud
 {
     public class BaseWallController
     {
+        public readonly TileType type;
         protected bool isAccessibleOpen;
         public bool IsAccessibleOpen => isAccessibleOpen;
         protected bool isAccessibleClose;
@@ -17,7 +18,7 @@ namespace UnderCloud
         public bool IsDamagableClose => isDamagableClose;
         public BaseWallController(TileType type)
         {
-            
+            this.type = type;
         }
         protected virtual void OnchangeOpenCloseEye(PlayerState arg1)
         {
