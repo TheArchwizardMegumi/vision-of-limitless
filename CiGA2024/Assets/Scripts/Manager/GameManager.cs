@@ -6,7 +6,6 @@ public class GameManager : Sington<GameManager>
 {
     void Awake()
     {
-        DontDestroyOnLoad(this);
         Messenger.AddListener(MsgType.playerHurt, ReloadLevel);
     }
 
@@ -22,6 +21,8 @@ public class GameManager : Sington<GameManager>
 
     public void ReloadLevel()
     {
+        // TODO: Can only reload once
+        Debug.Log("Reload Level");
         UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
     }
 
