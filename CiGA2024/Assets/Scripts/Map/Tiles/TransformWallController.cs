@@ -6,7 +6,7 @@ namespace UnderCloud
 {
     public class TransformWallController : BaseWallController
     {
-        public TransformWallController() : base(TileType.NormalWall)
+        public TransformWallController() : base(TileType.TransformWall)
         {
             isAccessibleOpen = false;
             isAccessibleClose = false;

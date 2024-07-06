@@ -6,7 +6,7 @@ namespace UnderCloud
 {
     public class FantasyWallController : BaseWallController
     {
-        public FantasyWallController() : base(TileType.NormalWall)
+        public FantasyWallController() : base(TileType.FantasyWall)
         {
             isAccessibleOpen = true;
             isAccessibleClose = false;
