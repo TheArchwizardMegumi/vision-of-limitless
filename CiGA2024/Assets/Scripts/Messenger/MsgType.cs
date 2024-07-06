@@ -19,4 +19,5 @@ public static class MsgType
     /// �������ʱ�������¼�
     /// </summary>
     public static string playerHurt = nameof(playerHurt);
+    public static string playerWin = nameof(playerWin);
 }

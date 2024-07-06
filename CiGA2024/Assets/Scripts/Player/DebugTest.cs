@@ -13,9 +13,14 @@ public class DebugTest : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Space))
+        if(Input.GetKeyDown(KeyCode.H))
         {
             Messenger.Broadcast(MsgType.playerHurt);
+        }
+
+        if(Input.GetKeyDown(KeyCode.G))
+        {
+            Messenger.Broadcast(MsgType.playerWin);
         }
         
     }

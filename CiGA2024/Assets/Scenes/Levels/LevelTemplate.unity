@@ -858,8 +858,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1479890073}
   - component: {fileID: 1479890074}
-  - component: {fileID: 1479890075}
   - component: {fileID: 1479890076}
+  - component: {fileID: 1479890077}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -934,19 +934,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &1479890075
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1479890072}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 61bb13889ef7aa445a3f88042167e3eb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isOpenEye: 0
 --- !u!114 &1479890076
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -959,6 +946,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8478ed8a0f2079e4e866bfc870f8694c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1479890077
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1479890072}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc08014d4897c154890ed839d953ade6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 1479890073}
+  smoothTime: 0
+  position: {x: 0, y: 0, z: 0}
+  isWalk: 0
+  touchWall: 0
+  backPosition: {x: 0, y: 0, z: 0}
+  backSmoothTime: 0
+  isOpenEye: 0
 --- !u!1 &1623919011
 GameObject:
   m_ObjectHideFlags: 0
