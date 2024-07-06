@@ -25,22 +25,27 @@ public class GameManager : Singleton<GameManager>
         
     }
 
+    public void LoadLevel()
+    {
+        // int index;
+        // currentLevelIndex = index; 
+    }
+
     private void LoadNextLevel()
     {
-        // load next level, destroy current level
-        if (currentLevelIndex >= levelContainer.levels.Count)
+        if (currentLevelIndex >= levelContainer.levels.Length - 1)
         {
             Debug.Log("No more levels");
             return;
         }
         currentLevelIndex += 1;
-        SceneManager.LoadScene(level, LoadSceneMode.Single);
+        SceneManager.LoadSceneAsync(levelContainer.levels[currentLevelIndex].name);
     }
 
     private void ReloadLevel()
     {
-        // 
-        SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name, LoadSceneMode.Single);
+        Debug.Log(levelContainer.levels[currentLevelIndex]);
+        SceneManager.LoadSceneAsync(levelContainer.levels[currentLevelIndex].name);
     }
 
     public void ExitGame()
