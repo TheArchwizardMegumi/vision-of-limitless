@@ -27,12 +27,19 @@ public class GameManager : Singleton<GameManager>
 
     private void LoadNextLevel()
     {
-        int level = UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex + 1;
+        // load next level, destroy current level
+        if (currentLevelIndex >= levelContainer.levels.Count)
+        {
+            Debug.Log("No more levels");
+            return;
+        }
+        currentLevelIndex += 1;
         SceneManager.LoadScene(level, LoadSceneMode.Single);
     }
 
     private void ReloadLevel()
     {
+        // 
         SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name, LoadSceneMode.Single);
     }
 
