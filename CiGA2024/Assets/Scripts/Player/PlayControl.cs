@@ -75,8 +75,8 @@ public class PlayControl : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space) && !isBlinking)
         {
             isBlinking = true;
-            StartCoroutine(Blinking());
             ChangeEyeState();
+            StartCoroutine(Blinking());
         }
         if (Input.GetKeyDown(KeyCode.W))
         {
