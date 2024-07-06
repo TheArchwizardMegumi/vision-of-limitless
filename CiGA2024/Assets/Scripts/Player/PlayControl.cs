@@ -27,6 +27,9 @@ public class PlayControl : MonoBehaviour
     public float distance;
     [Header("睁眼闭眼")]
     public PlayerState isOpenEye = PlayerState.Open;
+    public float blinkTime = 0.5f;
+    public bool eyeOpening;
+    bool isBlinking = false;
     [Header("人物受伤")]
     public bool isHurt;
     [Header("动画相关")]
@@ -47,6 +50,7 @@ public class PlayControl : MonoBehaviour
         Timer();
         Move();
         PlayerDie();
+        eyeStateCheck();
         ControlCheck();
         SetAnimation();
     }
@@ -68,17 +72,15 @@ public class PlayControl : MonoBehaviour
         backDownPosition = new Vector3(position.x, position.y -  0.8f, position.z);
         backLeftPosition = new Vector3(position.x - 0.8f, position.y, position.z);
         backRightPosition = new Vector3(position.x + 0.8f, position.y, position.z);
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space) && !isBlinking)
         {
-            if (touchWall == false && isWalk == false)
-            {
-                ChangeEyeState();
-            }
-
+            isBlinking = true;
+            StartCoroutine(Blinking());
+            ChangeEyeState();
         }
         if (Input.GetKeyDown(KeyCode.W))
         {
-            if (isWalk == false && touchUpWall == false)
+            if (isWalk == false && touchUpWall == false && crashWall == false)
             {
                 position.y += 1;
                 position.z += -0.01f;
@@ -96,7 +98,7 @@ public class PlayControl : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.S))
         {
-            if (isWalk == false && touchDownWall == false)
+            if (isWalk == false && touchDownWall == false && crashWall == false)
             {
                 position.y += -1;
                 position.z += 0.01f;
@@ -111,7 +113,7 @@ public class PlayControl : MonoBehaviour
 
         }
 
-        if (Input.GetKeyDown(KeyCode.A))
+        if (Input.GetKeyDown(KeyCode.A) && crashWall == false)
         {
             player.localScale = new Vector3(-1, 1, 1);
             if (isWalk == false&&touchLeftWall==false)
@@ -128,7 +130,7 @@ public class PlayControl : MonoBehaviour
             }
         }
         
-        if (Input.GetKeyDown(KeyCode.D))
+        if (Input.GetKeyDown(KeyCode.D) && crashWall == false)
         {
             player.localScale = new Vector3(1, 1, 1);
             if (isWalk == false&&touchRightWall==false)
@@ -177,6 +179,11 @@ public class PlayControl : MonoBehaviour
         }
     }
 
+    IEnumerator Blinking()
+    {
+        yield return new WaitForSeconds(blinkTime);
+        isBlinking = false;
+    }
 
     public void Timer()
     {
@@ -195,11 +202,24 @@ public class PlayControl : MonoBehaviour
         
     }
 
+    void eyeStateCheck()
+    {
+        if(isOpenEye == PlayerState.Open)
+        {
+            eyeOpening = true;
+        }
+        else
+        {
+            eyeOpening = false;
+        }
+    }
 
     //Animation
     public void SetAnimation()
     {
         anim.SetBool("isWalk",isWalk);
         anim.SetBool("crashWall", crashWall);
+        anim.SetBool("isHurt", isHurt);
+        anim.SetBool("eyeOpening", eyeOpening);
     }
 }
