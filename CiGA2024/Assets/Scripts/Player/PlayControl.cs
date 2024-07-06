@@ -29,6 +29,12 @@ public class PlayControl : MonoBehaviour
     public PlayerState isOpenEye = PlayerState.Open;
     [Header("人物受伤")]
     public bool isHurt;
+    private Animator anim;
+
+    private void Awake()
+    {
+        anim = GetComponent<Animator>();
+    }
     private void FixedUpdate()
     {
         TouchWallEffect();
@@ -39,9 +45,7 @@ public class PlayControl : MonoBehaviour
         Move();
         PlayerDie();
         ControlCheck();
-
-
-
+        SetAnimation();
     }
 
     public void Move()
@@ -168,4 +172,11 @@ public class PlayControl : MonoBehaviour
 
 
 
+
+
+    //Animation
+    public void SetAnimation()
+    {
+        anim.SetBool("isWalk",isWalk);
+    }
 }
