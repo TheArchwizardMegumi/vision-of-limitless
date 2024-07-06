@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7dd8a61b8e4ac0f4184ef464ae909d09, type: 3}
-  m_Name: Exit
+  m_Name: NormalWall_07
   m_EditorClassIdentifier: 
-  m_DefaultSprite: {fileID: 21300000, guid: 88bc847dc37cac848a4cafbc8e754a3a, type: 3}
+  m_DefaultSprite: {fileID: -372655689, guid: 71033fd42676052499ffbb0e4f930ce9, type: 3}
   m_DefaultGameObject: {fileID: 0}
   m_DefaultColliderType: 1
   m_TilingRules: []
-  type: 6
+  type: 0

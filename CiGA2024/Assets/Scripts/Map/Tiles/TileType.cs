@@ -4,5 +4,8 @@ public enum TileType
     TransformWall,
     DamageWall,
     FantasyWall,
+    FantasyDamageWall,
     DontRemoveWall,
+    Exit,
+    SpawnPoint,
 }

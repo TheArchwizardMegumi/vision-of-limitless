@@ -4,12 +4,12 @@ using UnityEngine;
 
 namespace UnderCloud
 {
-    public class TransformWallController : BaseWallController
+    public class Exit : BaseWallController
     {
-        public TransformWallController() : base(TileType.TransformWall)
+        public Exit() : base(TileType.Exit)
         {
-            isAccessibleOpen = false;
-            isAccessibleClose = false;
+            isAccessibleOpen = true;
+            isAccessibleClose = true;
             isDamagableOpen = false;
             isDamagableClose = false;
         }

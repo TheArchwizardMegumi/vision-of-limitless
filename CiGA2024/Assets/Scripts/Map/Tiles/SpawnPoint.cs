@@ -4,12 +4,12 @@ using UnityEngine;
 
 namespace UnderCloud
 {
-    public class TransformWallController : BaseWallController
+    public class SpawnPoint : BaseWallController
     {
-        public TransformWallController() : base(TileType.TransformWall)
+        public SpawnPoint() : base(TileType.SpawnPoint)
         {
-            isAccessibleOpen = false;
-            isAccessibleClose = false;
+            isAccessibleOpen = true;
+            isAccessibleClose = true;
             isDamagableOpen = false;
             isDamagableClose = false;
         }

@@ -6,7 +6,7 @@ namespace UnderCloud
 {
     public class DontRemoveWallController : BaseWallController
     {
-        public DontRemoveWallController() : base(TileType.NormalWall)
+        public DontRemoveWallController() : base(TileType.DontRemoveWall)
         {
             isAccessibleOpen = false;
             isAccessibleClose = false;

@@ -6,12 +6,12 @@ namespace UnderCloud
 {
     public class DamageWallController : BaseWallController
     {
-        public DamageWallController() : base(TileType.NormalWall)
+        public DamageWallController() : base(TileType.DamageWall)
         {
             isAccessibleOpen = false;
-            isAccessibleClose = true;
+            isAccessibleClose = false;
             isDamagableOpen = true;
-            isDamagableClose = false;
+            isDamagableClose = true;
         }
     }
 }
