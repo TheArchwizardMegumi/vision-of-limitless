@@ -15,6 +15,6 @@ public class Test : MonoBehaviour
         MapManager.LoadMapOfCurrentLevel();
         yield return null;
         Debug.Log($"Access at 0,0 , Open: {MapManager.IsAccessible(new Vector2Int(0, 0), PlayerState.Open)}");
-        Debug.Log($"Access at -1,0 , Open: {MapManager.IsAccessible(new Vector2Int(-1, 0), PlayerState.Open)}");
+        Debug.Log($"Access at -2,0 , Open: {MapManager.IsAccessible(new Vector2Int(-2, 0), PlayerState.Open)}");
     }
 }

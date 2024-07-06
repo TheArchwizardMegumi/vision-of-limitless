@@ -86,12 +86,13 @@ namespace UnderCloud
                         tile = map.GetTile(new Vector3Int(i, j, 0));
                         if (tile != null)
                         {
-                            if (tile is CustomAnimatedTile customTile)
+                            if (tile is CustomRuleTile customTile)
                             {
                                 if (!tiles.ContainsKey(new Vector2Int(i, j)))
                                 {
                                     tiles.Add(new Vector2Int(i, j), GenerateTile(customTile.type));
                                 }
+                                map.SetTransformMatrix(new Vector3Int(i, j, 0), Matrix4x4.TRS(new Vector3(i, j, j * 1f), Quaternion.identity, Vector3.one));
                             }
                         }
                     }
@@ -110,6 +111,10 @@ namespace UnderCloud
             return type switch
             {
                 TileType.NormalWall => new NormalWallController(),
+                TileType.FantasyWall => new FantasyWallController(),
+                TileType.DamageWall => new DamageWallController(),
+                TileType.DontRemoveWall => new DontRemoveWallController(),
+                TileType.TransformWall => new TransformWallController(),
                 _ => null,
             };
         }
