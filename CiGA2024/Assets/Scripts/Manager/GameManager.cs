@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 public class GameManager : Singleton<GameManager>
 {
     public LevelContainer levelContainer;
-    int currentLevelIndex = 0;
+    int currentLevelIndex;
 
     // void Awake()
     // {
@@ -18,6 +18,7 @@ public class GameManager : Singleton<GameManager>
         // 需要加在这里，因为场景会销毁，所以需要重新注册
         Messenger.AddListener(MsgType.playerHurt, ReloadLevel);
         Messenger.AddListener(MsgType.playerWin, LoadNextLevel);
+        currentLevelIndex = PlayerPrefs.GetInt("currentLevelIndex", 0);
     }
 
     void Update()
@@ -34,6 +35,7 @@ public class GameManager : Singleton<GameManager>
 
     private void LoadNextLevel()
     {
+        Debug.Log(currentLevelIndex + " " + (levelContainer.levels.Length - 1));
         if (currentLevelIndex >= levelContainer.levels.Length - 1)
         {
             Debug.Log("No more levels");

@@ -66,9 +66,9 @@ namespace UnderCloud
             if (tiles.TryGetValue(position, out BaseWallController tile))
             {
                 if (playerState == PlayerState.Open)
-                    return tile.IsAccessibleOpen;
+                    return tile.IsDamagableOpen;
                 else
-                    return tile.IsAccessibleClose;
+                    return tile.IsDamagableClose;
             }
             else
                 return false;
