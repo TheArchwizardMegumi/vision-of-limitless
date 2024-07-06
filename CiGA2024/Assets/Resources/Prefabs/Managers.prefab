@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3977906286153052059}
   - component: {fileID: 3977906286153052058}
+  - component: {fileID: 4826896781186706984}
   m_Layer: 0
   m_Name: Managers
   m_TagString: Untagged
@@ -45,3 +46,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   levelContainer: {fileID: 11400000, guid: edc65a02099e76a4891bf3648526055b, type: 2}
+--- !u!114 &4826896781186706984
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3977906286153052061}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 965983d5a7f8fac42a3604ff01a3fbbf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
