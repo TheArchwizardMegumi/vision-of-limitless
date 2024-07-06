@@ -16,6 +16,12 @@ namespace UnderCloud
         {
             tiles ??= new Dictionary<Vector2Int, BaseWallController>();
         }
+        private void Start()
+        {
+            //设置变化墙初始图层
+            GlobalData.TransformWallLayerNum = 0;
+            Messenger.AddListener<PlayerState>(MsgType.changeOpenCloseEye, SwitchTransformWallState); 
+        }
         /// <summary>
         /// 获取一个具体地块的信息
         /// </summary>
@@ -76,26 +82,51 @@ namespace UnderCloud
             //扫描并录入当前地图
             tiles ??= new Dictionary<Vector2Int, BaseWallController>();
             tiles.Clear();
+
             TileBase tile;
-            foreach (Tilemap map in GameObject.FindWithTag(TagName.TileMap).transform.GetComponentsInChildren<Tilemap>())
+            GameObject parent = GameObject.FindWithTag(TagName.TileMap);
+            GameObject child;
+            //刷新变化墙图层状态
+            parent.transform.GetChild(GlobalData.TransformWallLayerNum).gameObject.SetActive(true);
+            parent.transform.GetChild(1 - GlobalData.TransformWallLayerNum).gameObject.SetActive(false);
+
+            for (int c = 0; c < parent.transform.childCount; c++)
             {
-                for (int i = -32; i < 32; i++)
+                child = parent.transform.GetChild(c).gameObject;
+                if (child.activeSelf)
                 {
-                    for(int j = -32; j < 32; j++)
+                    if (child.TryGetComponent(out Tilemap map))
                     {
-                        tile = map.GetTile(new Vector3Int(i, j, 0));
-                        if (tile != null)
+                        for (int i = -32; i < 32; i++)
                         {
-                            if (tile is CustomAnimatedTile customTile)
+                            for (int j = -32; j < 32; j++)
                             {
-                                if (!tiles.ContainsKey(new Vector2Int(i, j)))
+                                tile = map.GetTile(new Vector3Int(i, j, 0));
+                                if (tile != null)
                                 {
-                                    tiles.Add(new Vector2Int(i, j), GenerateTile(customTile.type));
+                                    if (tile is CustomRuleTile customTile)
+                                    {
+                                        if (!tiles.ContainsKey(new Vector2Int(i, j)))
+                                        {
+                                            tiles.Add(new Vector2Int(i, j), GenerateTile(customTile.type));
+                                        }
+                                        //map.SetTransformMatrix(new Vector3Int(i, j, 0), Matrix4x4.TRS(new Vector3(i, j, j * 1f), Quaternion.identity, Vector3.one));
+                                    }
                                 }
                             }
                         }
                     }
+                    else
+                    {
+                        Debug.LogError($"Map的第{c}个子物体没有Tilemap组件");
+                    }
                 }
+            }
+
+
+            foreach (Tilemap map in GameObject.FindWithTag(TagName.TileMap).transform.GetComponentsInChildren<Tilemap>())
+            {
+                
             }
         }
         public static void UpdateMap(MapUpdate update)
@@ -105,11 +136,29 @@ namespace UnderCloud
                 tiles[positionsToUpdate] = newTile;
             }
         }
+        /// <summary>
+        /// 切换变化墙状态
+        /// </summary>
+        public static void SwitchTransformWallState(PlayerState playerState)
+        {
+            if (playerState == PlayerState.Open)
+            {
+                GlobalData.TransformWallLayerNum = 1 - GlobalData.TransformWallLayerNum;
+                LoadMapOfCurrentLevel();
+            }
+        }
         private static BaseWallController GenerateTile(TileType type)
         {
             return type switch
             {
                 TileType.NormalWall => new NormalWallController(),
+                TileType.FantasyWall => new FantasyWallController(),
+                TileType.FantasyDamageWall => new FantasyDamageWallController(),
+                TileType.DamageWall => new DamageWallController(),
+                TileType.DontRemoveWall => new DontRemoveWallController(),
+                TileType.TransformWall => new TransformWallController(),
+                TileType.SpawnPoint => new SpawnPoint(),
+                TileType.Exit => new Exit(),
                 _ => null,
             };
         }
