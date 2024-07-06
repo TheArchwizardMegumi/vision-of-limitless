@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnderCloud;
-
+using System;
 
 public class PlayControl : MonoBehaviour
 {
@@ -47,12 +47,29 @@ public class PlayControl : MonoBehaviour
     }
     private void Update()
     {
+        CheckWin();
         Timer();
         Move();
-        PlayerDie();
+        IsStuckInWall();
         eyeStateCheck();
         ControlCheck();
         SetAnimation();
+    }
+
+    private void CheckWin()
+    {
+        if (MapManager.GetTile(new Vector2Int((int)position.x, (int)position.y))?.type == TileType.Exit)
+        {
+            Messenger.Broadcast(MsgType.playerWin);
+        }
+    }
+
+    private void IsStuckInWall()
+    {
+        if (touchWall)
+        {
+            PlayerDie();
+        }
     }
 
     public void Move()
@@ -83,29 +100,32 @@ public class PlayControl : MonoBehaviour
             if (isWalk == false && touchUpWall == false && crashWall == false)
             {
                 position.y += 1;
-                position.z += -0.01f;
                 isWalk = true;
                 
             }
             if(touchUpWall == true)
             {
+                if (MapManager.IsDamagable(new Vector2Int((int)position.x, (int)position.y + 1), isOpenEye))
+                {
+                    PlayerDie();
+                }
                 crashWall = true;
                 transform.position = Vector3.SmoothDamp(transform.position, backUpPosition, ref velocity, backSmoothTime);
             }
-
-
-
         }
         if (Input.GetKeyDown(KeyCode.S))
         {
             if (isWalk == false && touchDownWall == false && crashWall == false)
             {
                 position.y += -1;
-                position.z += 0.01f;
                 isWalk = true;
             }
             if (touchDownWall == true)
             {
+                if (MapManager.IsDamagable(new Vector2Int((int)position.x, (int)position.y + 1), isOpenEye))
+                {
+                    PlayerDie();
+                }
                 crashWall = true;
                 transform.position = Vector3.SmoothDamp(transform.position, backDownPosition, ref velocity, backSmoothTime);
             }
@@ -124,6 +144,10 @@ public class PlayControl : MonoBehaviour
             }
         if (touchLeftWall == true)
             {
+                if (MapManager.IsDamagable(new Vector2Int((int)position.x, (int)position.y + 1), isOpenEye))
+                {
+                    PlayerDie();
+                }
                 crashWall = true;
                 transform.position = Vector3.SmoothDamp(transform.position,backLeftPosition ,ref velocity, backSmoothTime);
                 
@@ -140,6 +164,10 @@ public class PlayControl : MonoBehaviour
             }
             if (touchRightWall == true)
             {
+                if (MapManager.IsDamagable(new Vector2Int((int)position.x, (int)position.y + 1), isOpenEye))
+                {
+                    PlayerDie();
+                }
                 crashWall = true;
                 transform.position = Vector3.SmoothDamp(transform.position, backRightPosition, ref velocity, backSmoothTime);
             }
@@ -168,15 +196,16 @@ public class PlayControl : MonoBehaviour
     }
     private void PlayerDie()
     {
-        if (touchWall == true)
-        {
-            isHurt = true;
-        }
-        if (isHurt == true)
-        {
-            Messenger.Broadcast(MsgType.playerHurt);
+        StartCoroutine(DelayDying());
+    }
 
-        }
+    IEnumerator DelayDying()
+    {
+        yield return new WaitForSeconds(0.1f);
+        isHurt = true;
+        yield return new WaitForSeconds(1.5f);
+        Messenger.Broadcast(MsgType.playerHurt);
+        yield return null;
     }
 
     IEnumerator Blinking()
