@@ -29,7 +29,9 @@ public class PlayControl : MonoBehaviour
     public PlayerState isOpenEye = PlayerState.Open;
     [Header("人物受伤")]
     public bool isHurt;
+    [Header("动画相关")]
     private Animator anim;
+    public bool crashWall;
 
     private void Awake()
     {
@@ -42,6 +44,7 @@ public class PlayControl : MonoBehaviour
     }
     private void Update()
     {
+        Timer();
         Move();
         PlayerDie();
         ControlCheck();
@@ -84,6 +87,7 @@ public class PlayControl : MonoBehaviour
             }
             if(touchUpWall == true)
             {
+                crashWall = true;
                 transform.position = Vector3.SmoothDamp(transform.position, backUpPosition, ref velocity, backSmoothTime);
             }
 
@@ -100,6 +104,7 @@ public class PlayControl : MonoBehaviour
             }
             if (touchDownWall == true)
             {
+                crashWall = true;
                 transform.position = Vector3.SmoothDamp(transform.position, backDownPosition, ref velocity, backSmoothTime);
             }
            
@@ -117,9 +122,10 @@ public class PlayControl : MonoBehaviour
             }
         if (touchLeftWall == true)
             {
+                crashWall = true;
                 transform.position = Vector3.SmoothDamp(transform.position,backLeftPosition ,ref velocity, backSmoothTime);
+                
             }
-            
         }
         
         if (Input.GetKeyDown(KeyCode.D))
@@ -132,6 +138,7 @@ public class PlayControl : MonoBehaviour
             }
             if (touchRightWall == true)
             {
+                crashWall = true;
                 transform.position = Vector3.SmoothDamp(transform.position, backRightPosition, ref velocity, backSmoothTime);
             }
 
@@ -171,12 +178,28 @@ public class PlayControl : MonoBehaviour
     }
 
 
+    public void Timer()
+    {
+        float timer = 2;
+        float time = 0;
+        if (crashWall == true)
+        {
+            time++;
+            if (time < timer && crashWall == true)
+            {
+                crashWall = false;
+                time = 0;
 
+            }
+        }
+        
+    }
 
 
     //Animation
     public void SetAnimation()
     {
         anim.SetBool("isWalk",isWalk);
+        anim.SetBool("crashWall", crashWall);
     }
 }
