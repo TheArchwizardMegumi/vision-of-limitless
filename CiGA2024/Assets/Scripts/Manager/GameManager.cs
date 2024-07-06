@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class GameManager : Sington<GameManager>
+public class GameManager : Singleton<GameManager>
 {
-    void Awake()
-    {
-        
-    }
+    public LevelContainer levelContainer;
+    int currentLevelIndex = 0;
+
+    // void Awake()
+    // {
+    //     base.Awake();
+    // }
 
     void Start()
     {

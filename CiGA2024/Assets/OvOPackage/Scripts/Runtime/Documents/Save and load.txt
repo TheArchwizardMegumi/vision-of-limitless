@@ -1,0 +1,5 @@
+[1]Create a class inherited "SerializableSave" to store saving content.
+[2]Save: 
+	Serialize a save to string and use PersistentDataSaving.SaveData to save.
+[3]Load : 
+	Use PersistentDataSaving.LoadData<T> to load your save, where T is the type of your save.

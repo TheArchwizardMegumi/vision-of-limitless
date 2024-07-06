@@ -1,0 +1,12 @@
+{
+    "name": "ovotools",   		
+    "displayName": "OvOTools",     		
+    "version": "0.0.1",                		
+    "unity": "2021.3",                 		
+    "unityRelease": "4f1",					
+    "description": "Used for help development",  
+    "keywords": ["OvO","Package"],         
+    "author": "谁家大电视",                      
+    "dependencies":[],                      
+    "samples": []
+}                 

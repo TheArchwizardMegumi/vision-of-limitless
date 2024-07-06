@@ -11,7 +11,7 @@ using System.Reflection;
 /// <summary>
 /// 项目全局管理类，处理项目中跨场景的全局管理
 /// </summary>
-public class GlobalManager : Sington<GlobalManager>
+public class GlobalManager : Singleton<GlobalManager>
 {
 
     /// <summary>
