@@ -4,13 +4,6 @@ using UnityEngine;
 
 public class DebugTest : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
     void Update()
     {
         if(Input.GetKeyDown(KeyCode.H))
@@ -21,11 +14,6 @@ public class DebugTest : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.G))
         {
             Messenger.Broadcast(MsgType.playerWin);
-        }
-
-        if(Input.GetKeyDown(KeyCode.O))
-        {
-            ScreenCapture.CaptureScreenshot("Assets/screenshot.png");
         }
         
     }
