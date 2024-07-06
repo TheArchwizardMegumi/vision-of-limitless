@@ -5,15 +5,16 @@ using UnityEngine.UI;
 
 public class EyeUI : MonoBehaviour
 {
-    public Sprite openEye;
-    public Sprite closeEye;
+    public Sprite[] openEye;
+    public Sprite[] closeEye;
+    public float eyeSpeed = 0.2f;
 
     private Image eyeImage;
 
-    // Start is called before the first frame update
     void Start()
     {
         eyeImage = GetComponent<Image>();
+        StartCoroutine(OpenEyeAnimation());
         Messenger.AddListener<PlayerState>(MsgType.changeOpenCloseEye, ChangeEye);
     }
 
@@ -21,13 +22,37 @@ public class EyeUI : MonoBehaviour
     {
         if (state == PlayerState.Open)
         {
-            // set the source image of the Image component to the openEye sprite
-            
-            eyeImage.sprite = openEye;
+            StartCoroutine(OpenEyeAnimation());
         }
         else
         {
-            eyeImage.sprite = closeEye;
+            StartCoroutine(CloseEyeAnimation());
+        }
+    }
+
+    IEnumerator OpenEyeAnimation()
+    {
+        while (true)
+        {
+            eyeImage.sprite = openEye[0];
+            yield return new WaitForSeconds(eyeSpeed);
+            eyeImage.sprite = openEye[1];
+            yield return new WaitForSeconds(eyeSpeed);
+            eyeImage.sprite = openEye[2];
+            yield return new WaitForSeconds(eyeSpeed);
+        }
+    }
+
+    IEnumerator CloseEyeAnimation()
+    {
+        while (true)
+        {
+            eyeImage.sprite = closeEye[0];
+            yield return new WaitForSeconds(eyeSpeed);
+            eyeImage.sprite = closeEye[1];
+            yield return new WaitForSeconds(eyeSpeed);
+            eyeImage.sprite = closeEye[2];
+            yield return new WaitForSeconds(eyeSpeed);
         }
     }
 }

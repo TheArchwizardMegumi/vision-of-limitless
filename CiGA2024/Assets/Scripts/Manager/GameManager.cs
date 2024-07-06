@@ -8,10 +8,10 @@ public class GameManager : Singleton<GameManager>
     public LevelContainer levelContainer;
     int currentLevelIndex = 0;
 
-    void Awake()
-    {
-        base.Awake();
-    }
+    // void Awake()
+    // {
+    //     base.Awake();
+    // }
 
     void Start()
     {
@@ -37,6 +37,7 @@ public class GameManager : Singleton<GameManager>
         if (currentLevelIndex >= levelContainer.levels.Length - 1)
         {
             Debug.Log("No more levels");
+            SceneManager.LoadSceneAsync("Win");
             return;
         }
         currentLevelIndex = PlayerPrefs.GetInt("currentLevelIndex", 0);
