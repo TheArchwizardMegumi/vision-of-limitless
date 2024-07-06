@@ -13,6 +13,5 @@ namespace UnderCloud
             isDamagableOpen = false;
             isDamagableClose = false;
         }
-        //TODO: £¨ÔÆµ×£©±ä»¯Ç½ÌØÊâÂß¼­
     }
 }
