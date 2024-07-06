@@ -1,22 +1,25 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnderCloud;
  
 
 public class PlayControl : MonoBehaviour
 {
-    [Header("øÿ÷∆œ‡πÿ")]
+    [Header("ÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩ")]
     public Transform player;
     private Vector3 velocity = Vector3.zero;
     public float smoothTime;
     public Vector3 position;
     public bool isWalk;
-    [Header("◊≤«Ωœ‡πÿ")]
+    [Header("◊≤«ΩÔøΩÔøΩÔøΩ")]
     public bool touchWall;
     public Vector3 backPosition;
     public float backSmoothTime;
-    [Header("’ˆ—€±’—€")]
+    [Header("ÔøΩÔøΩÔøΩ€±ÔøΩÔøΩÔøΩ")]
     public PlayerState isOpenEye = PlayerState.Open;
+    [Header("ÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩ")]
+    public bool isHurt;
     private void FixedUpdate()
     {
         TouchWallEffect();
@@ -25,7 +28,9 @@ public class PlayControl : MonoBehaviour
     {
         Move();
         ControlCheck();
-        
+        PlayerDie();
+
+
     }
 
     public void Move()
@@ -78,12 +83,8 @@ public class PlayControl : MonoBehaviour
     }
 
     public void TouchWallEffect()
-    {
-        //if(position.x > 0.5||position.y > 2.5)    //≤‚ ‘”√µƒ
-        //{                                         //≤‚ ‘”√µƒ        
-        //    touchWall = true;                     //≤‚ ‘”√µƒ            
-        //}                                         //≤‚ ‘”√µƒ    
-        if (touchWall == true)
+    {              
+        if (!MapManager.IsAccessible(new Vector2Int((int)position.x - 1, (int)position.y), isOpenEye)) 
         {
             transform.position = Vector3.SmoothDamp(transform.position, backPosition, ref velocity, backSmoothTime);
             position = backPosition;
@@ -95,5 +96,13 @@ public class PlayControl : MonoBehaviour
         isOpenEye = isOpenEye == PlayerState.Open ? PlayerState.Close : PlayerState.Open;
         Messenger.Broadcast<PlayerState>(MsgType.changeOpenCloseEye, isOpenEye);
     }
+     private void PlayerDie()
+    {
+        if(isHurt == true)
+        {
+            Messenger.Broadcast(MsgType.playerHurt);
 
+        }
+
+    }
 }
