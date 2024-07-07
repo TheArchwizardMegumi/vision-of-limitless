@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnderCloud;
 using System;
+using UnityEngine.SceneManagement;
 
 public class PlayControl : MonoBehaviour
 {
@@ -32,6 +33,7 @@ public class PlayControl : MonoBehaviour
     bool isBlinking = false;
     [Header("人物受伤")]
     public bool isHurt;
+    public bool isDead;
     [Header("动画相关")]
     private Animator anim;
     public bool crashWall;
@@ -43,7 +45,6 @@ public class PlayControl : MonoBehaviour
     private void FixedUpdate()
     {
         TouchWallEffect();
-
     }
     private void Update()
     {
@@ -51,9 +52,48 @@ public class PlayControl : MonoBehaviour
         Timer();
         Move();
         IsStuckInWall();
-        eyeStateCheck();
+        EyeStateCheck();
         ControlCheck();
         SetAnimation();
+    }
+
+    public void Init()
+    {
+        gameObject.SetActive(true);
+        isWalk = false;
+        isHurt = false;
+        isDead = false;
+        touchWall = false;
+        touchUpWall = false;
+        touchLeftWall = false;
+        touchRightWall = false;
+        touchDownWall = false;
+        anim.SetTrigger("Revive");
+        velocity = Vector3.zero;
+        //检查摄像机是否只有一个
+        GameObject mCamera = GameObject.FindWithTag("MainCamera");
+        if (mCamera)
+        {
+            mCamera.SetActive(false);
+            transform.GetChild(0).gameObject.SetActive(true);
+        }
+    }
+
+    public static void SpawnPlayer(Vector3 position)
+    {
+        GameObject pl = GameObject.FindWithTag(TagName.Player);
+        if (pl == null)
+        {
+            pl = Resources.Load<GameObject>("Prefabs/Player");
+        }
+        if (pl.TryGetComponent(out PlayControl player))
+        {
+            player.transform.position = position;
+            player.position = position;
+            player.Init();
+        }
+        else
+            Debug.LogError("加载的玩家资源缺少必要组件");
     }
 
     private void CheckWin()
@@ -61,12 +101,14 @@ public class PlayControl : MonoBehaviour
         if (MapManager.GetTile(new Vector2Int((int)position.x, (int)position.y))?.type == TileType.Exit)
         {
             Messenger.Broadcast(MsgType.playerWin);
+            transform.position = Vector3.zero;
+            position = Vector3.zero;
         }
     }
 
     private void IsStuckInWall()
     {
-        if (touchWall)
+        if (touchWall && !isDead)
         {
             PlayerDie();
         }
@@ -80,7 +122,7 @@ public class PlayControl : MonoBehaviour
             player.position = position;
             isWalk = false;
         }
-                
+
     }
 
     public void ControlCheck()
@@ -132,7 +174,6 @@ public class PlayControl : MonoBehaviour
                     transform.position = Vector3.SmoothDamp(transform.position, backDownPosition, ref velocity, backSmoothTime);
                 }
 
-
             }
 
             if (Input.GetKeyDown(KeyCode.A) && crashWall == false)
@@ -179,12 +220,12 @@ public class PlayControl : MonoBehaviour
         }
     }
     public void TouchWallEffect()
-    {  
+    {
         touchWall = !MapManager.IsAccessible(new Vector2Int((int)position.x, (int)position.y), isOpenEye);
-        touchUpWall = !MapManager.IsAccessible(new Vector2Int((int)position.x, (int)position.y+1), isOpenEye);
-        touchDownWall= !MapManager.IsAccessible(new Vector2Int((int)position.x, (int)position.y-1), isOpenEye);
-        touchLeftWall= !MapManager.IsAccessible(new Vector2Int((int)position.x-1, (int)position.y), isOpenEye);
-        touchRightWall= !MapManager.IsAccessible(new Vector2Int((int)position.x+1, (int)position.y), isOpenEye);
+        touchUpWall = !MapManager.IsAccessible(new Vector2Int((int)position.x, (int)position.y + 1), isOpenEye);
+        touchDownWall = !MapManager.IsAccessible(new Vector2Int((int)position.x, (int)position.y - 1), isOpenEye);
+        touchLeftWall = !MapManager.IsAccessible(new Vector2Int((int)position.x - 1, (int)position.y), isOpenEye);
+        touchRightWall = !MapManager.IsAccessible(new Vector2Int((int)position.x + 1, (int)position.y), isOpenEye);
 
         //if(position.x > 0.5||position.y > 2.5)    //测试用的
         //{                                         //测试用的        
@@ -198,7 +239,11 @@ public class PlayControl : MonoBehaviour
     }
     private void PlayerDie()
     {
-        StartCoroutine(DelayDying());
+        if (!isDead)
+        {
+            isDead = true;
+            StartCoroutine(DelayDying());
+        }
     }
 
     IEnumerator DelayDying()
@@ -207,6 +252,8 @@ public class PlayControl : MonoBehaviour
         isHurt = true;
         yield return new WaitForSeconds(1.5f);
         Messenger.Broadcast(MsgType.playerHurt);
+        transform.position = new Vector3(200, 200, 0);
+        position = transform.position;
         yield return null;
     }
 
@@ -230,12 +277,12 @@ public class PlayControl : MonoBehaviour
 
             }
         }
-        
+
     }
 
-    void eyeStateCheck()
+    void EyeStateCheck()
     {
-        if(isOpenEye == PlayerState.Open)
+        if (isOpenEye == PlayerState.Open)
         {
             eyeOpening = true;
         }
@@ -248,7 +295,7 @@ public class PlayControl : MonoBehaviour
     //Animation
     public void SetAnimation()
     {
-        anim.SetBool("isWalk",isWalk);
+        anim.SetBool("isWalk", isWalk);
         anim.SetBool("crashWall", crashWall);
         anim.SetBool("isHurt", isHurt);
         anim.SetBool("eyeOpening", eyeOpening);

@@ -12,15 +12,21 @@ namespace UnderCloud
     public class MapManager : Singleton<MapManager>
     {
         private static Dictionary<Vector2Int, BaseWallController> tiles;
+        private static Vector3 spawnPoint;
         public MapManager()
         {
             tiles ??= new Dictionary<Vector2Int, BaseWallController>();
-        }
-        private void Start()
-        {
             //设置变化墙初始图层
             GlobalData.TransformWallLayerNum = 0;
-            Messenger.AddListener<PlayerState>(MsgType.changeOpenCloseEye, SwitchTransformWallState); 
+        }
+        public static void InitWhenLevelStart()
+        {
+            tiles ??= new Dictionary<Vector2Int, BaseWallController>();
+            GlobalData.TransformWallLayerNum = 0;
+            spawnPoint = Vector3.zero;
+
+            LoadMapOfCurrentLevel();
+            PlayControl.SpawnPlayer(spawnPoint);
         }
         /// <summary>
         /// 获取一个具体地块的信息
@@ -82,6 +88,7 @@ namespace UnderCloud
             //扫描并录入当前地图
             tiles ??= new Dictionary<Vector2Int, BaseWallController>();
             tiles.Clear();
+            spawnPoint = Vector3.zero;
 
             TileBase tile;
             GameObject parent = GameObject.FindWithTag(TagName.TileMap);
@@ -110,6 +117,8 @@ namespace UnderCloud
                                         {
                                             tiles.Add(new Vector2Int(i, j), GenerateTile(customTile.type));
                                         }
+                                        if (customTile.type == TileType.SpawnPoint)
+                                            spawnPoint = new Vector3(i, j, 0);
                                         //map.SetTransformMatrix(new Vector3Int(i, j, 0), Matrix4x4.TRS(new Vector3(i, j, j * 1f), Quaternion.identity, Vector3.one));
                                     }
                                 }
@@ -121,12 +130,6 @@ namespace UnderCloud
                         Debug.LogError($"Map的第{c}个子物体没有Tilemap组件");
                     }
                 }
-            }
-
-
-            foreach (Tilemap map in GameObject.FindWithTag(TagName.TileMap).transform.GetComponentsInChildren<Tilemap>())
-            {
-                
             }
         }
         public static void UpdateMap(MapUpdate update)
