@@ -20,5 +20,6 @@ public static class MsgType
     /// </summary>
     public static string playerHurt = nameof(playerHurt);
     public static string playerWin = nameof(playerWin);
+    public static string reachExit = nameof(reachExit);
     public static string levelStart = nameof(levelStart);
 }

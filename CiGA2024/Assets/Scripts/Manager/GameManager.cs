@@ -9,7 +9,7 @@ using UnityEngine.SceneManagement;
 public class GameManager : Singleton<GameManager>
 {
     public LevelContainer levelContainer;
-    int currentLevelIndex;
+    public int currentLevelIndex;
 
     // void Awake()
     // {
