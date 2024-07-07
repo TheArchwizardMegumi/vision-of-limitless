@@ -213,7 +213,6 @@ public class PlayControl : MonoBehaviour
             }
         }
     }
-
     public void TouchWallEffect()
     {
         touchWall = !MapManager.IsAccessible(new Vector2Int((int)position.x, (int)position.y), isOpenEye);
