@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using static GlobalData;
 using UnderCloud;
+using UnityEngine.SceneManagement;
 
 public class Test : MonoBehaviour
 {
@@ -12,9 +13,7 @@ public class Test : MonoBehaviour
     }
     private IEnumerator TestCor()
     {
-        MapManager.LoadMapOfCurrentLevel();
-        yield return new WaitForSeconds(1f);
-        Messenger.Broadcast(MsgType.changeOpenCloseEye, PlayerState.Open);
+        SceneManager.UnloadSceneAsync("SelectLevel");
         yield return null;
     }
 }
