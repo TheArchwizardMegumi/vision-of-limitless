@@ -13,7 +13,7 @@ public class DebugTest : MonoBehaviour
 
         if(Input.GetKeyDown(KeyCode.G))
         {
-            Messenger.Broadcast(MsgType.playerWin);
+            Messenger.Broadcast(MsgType.reachExit);
         }
         
     }

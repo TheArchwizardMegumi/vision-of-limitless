@@ -328,8 +328,12 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1290478832}
     - target: {fileID: 5794453805006094022, guid: 6f1e02bd2c2a68546a0792df1159a351, type: 3}
+      propertyPath: smoothTime
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5794453805006094022, guid: 6f1e02bd2c2a68546a0792df1159a351, type: 3}
       propertyPath: backSmoothTime
-      value: 0.028
+      value: 0.02
       objectReference: {fileID: 0}
     - target: {fileID: 5794453805006094022, guid: 6f1e02bd2c2a68546a0792df1159a351, type: 3}
       propertyPath: BGSs.Array.size

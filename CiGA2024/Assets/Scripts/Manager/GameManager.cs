@@ -8,7 +8,20 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : Singleton<GameManager>
 {
-    public LevelContainer levelContainer;
+    public static string[] levelName = new string[11]
+    {
+        "Level0",
+        "Level1",
+        "Level2",
+        "Level3",
+        "Level4",
+        "Level5",
+        "Level9",
+        "Level10",
+        "Level6",
+        "Level8",
+        "Level7",
+    };
     public int currentLevelIndex;
 
     // void Awake()
@@ -39,18 +52,10 @@ public class GameManager : Singleton<GameManager>
         {
             SceneManager.LoadScene("Player", LoadSceneMode.Additive);
         }
-        Instance.StartCoroutine(LoadSceneCor(Instance.levelContainer.levels[index - 1].name));
+        Instance.StartCoroutine(LoadSceneCor(levelName[index - 1]));
         Instance.currentLevelIndex = index-1;
         PlayerPrefs.SetInt("currentLevelIndex", Instance.currentLevelIndex);
     }
-
-    public void UnloadScene(string name)
-    {
-        Debug.Log($"Unloading {name}");
-        Instance.StartCoroutine(UnloadSceneCor(name));
-    }
-
-    //将除了通关之外的所有场景加载都改为了这个协程，用于一异步加载完成后触发事件
     private static IEnumerator LoadSceneCor(string name)
     {
         if (SceneManager.GetSceneByName(name).isLoaded)
@@ -59,15 +64,23 @@ public class GameManager : Singleton<GameManager>
         }
         AsyncOperation operation = SceneManager.LoadSceneAsync(name, LoadSceneMode.Additive);
         yield return operation;
-        foreach (SceneAsset scene in Instance.levelContainer.levels)
+        foreach (string sceneName in levelName)
         {
-            if (scene.name == name)
+            if (sceneName == name)
             {
                 Messenger.Broadcast(MsgType.levelStart);
                 yield break;
             }
         }
     }
+    public void UnloadScene(string name)
+    {
+        Debug.Log($"Unloading {name}");
+        Instance.StartCoroutine(UnloadSceneCor(name));
+    }
+
+    //将除了通关之外的所有场景加载都改为了这个协程，用于一异步加载完成后触发事件
+
     private static IEnumerator UnloadSceneCor(string name)
     {
         yield return null;
@@ -76,22 +89,23 @@ public class GameManager : Singleton<GameManager>
 
     private void LoadNextLevel()
     {
-        Debug.Log(currentLevelIndex + " " + (levelContainer.levels.Length - 1));
-        if (currentLevelIndex >= levelContainer.levels.Length - 1)
+        Debug.Log(currentLevelIndex + " " + (levelName.Length - 1));
+        if (currentLevelIndex >= levelName.Length - 1)
         {
             Debug.Log("No more levels");
-            SceneManager.LoadSceneAsync("Win");
+            SceneManager.LoadSceneAsync("Win", LoadSceneMode.Additive);
+            SceneManager.UnloadSceneAsync(levelName[currentLevelIndex]);
             return;
         }
         currentLevelIndex = PlayerPrefs.GetInt("currentLevelIndex", 0);
-        SceneManager.UnloadSceneAsync(levelContainer.levels[currentLevelIndex].name);
+        SceneManager.UnloadSceneAsync(levelName[currentLevelIndex]);
         currentLevelIndex += 1;
         PlayerPrefs.SetInt("currentLevelIndex", currentLevelIndex);
         if (!SceneManager.GetSceneByName("Player").isLoaded)
         {
             SceneManager.LoadScene("Player", LoadSceneMode.Additive);
         }
-        StartCoroutine(LoadSceneCor(levelContainer.levels[currentLevelIndex].name));
+        StartCoroutine(LoadSceneCor(levelName[currentLevelIndex]));
     }
 
     private void ReloadLevel()
@@ -100,7 +114,7 @@ public class GameManager : Singleton<GameManager>
         {
             SceneManager.LoadScene("Player", LoadSceneMode.Additive);
         }
-        StartCoroutine(LoadSceneCor(levelContainer.levels[currentLevelIndex].name));
+        StartCoroutine(LoadSceneCor(levelName[currentLevelIndex]));
     }
 
     public void ExitGame()
