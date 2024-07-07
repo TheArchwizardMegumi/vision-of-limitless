@@ -51,9 +51,40 @@ public class PlayControl : MonoBehaviour
         Timer();
         Move();
         IsStuckInWall();
-        eyeStateCheck();
+        EyeStateCheck();
         ControlCheck();
         SetAnimation();
+    }
+
+    public void Init()
+    {
+        isWalk = false;
+        isHurt = false;
+        velocity = Vector3.zero;
+        //检查摄像机是否只有一个
+        GameObject mCamera = GameObject.FindWithTag("MainCamera");
+        if (mCamera)
+        {
+            mCamera.SetActive(false);
+            transform.GetChild(0).gameObject.SetActive(true);
+        }
+    }
+
+    public static void SpawnPlayer(Vector3 position)
+    {
+        GameObject pl = GameObject.FindWithTag(TagName.Player);
+        if (pl == null)
+        {
+            pl = (GameObject)Resources.Load("Prefabs/Player.prefab");
+        }
+        if (pl.TryGetComponent(out PlayControl player))
+        {
+            player.Init();
+            player.transform.position = position;
+            player.position = position;
+        }
+        else
+            Debug.LogError("加载的玩家资源缺少必要组件");
     }
 
     private void CheckWin()
@@ -80,13 +111,13 @@ public class PlayControl : MonoBehaviour
             player.position = position;
             isWalk = false;
         }
-                
+
     }
 
     public void ControlCheck()
     {
         backUpPosition = new Vector3(position.x, position.y + 0.8f, position.z);
-        backDownPosition = new Vector3(position.x, position.y -  0.8f, position.z);
+        backDownPosition = new Vector3(position.x, position.y - 0.8f, position.z);
         backLeftPosition = new Vector3(position.x - 0.8f, position.y, position.z);
         backRightPosition = new Vector3(position.x + 0.8f, position.y, position.z);
         if (Input.GetKeyDown(KeyCode.Space) && !isBlinking)
@@ -101,9 +132,9 @@ public class PlayControl : MonoBehaviour
             {
                 position.y += 1;
                 isWalk = true;
-                
+
             }
-            if(touchUpWall == true)
+            if (touchUpWall == true)
             {
                 if (MapManager.IsDamagable(new Vector2Int((int)position.x, (int)position.y + 1), isOpenEye))
                 {
@@ -129,35 +160,35 @@ public class PlayControl : MonoBehaviour
                 crashWall = true;
                 transform.position = Vector3.SmoothDamp(transform.position, backDownPosition, ref velocity, backSmoothTime);
             }
-           
+
 
         }
 
         if (Input.GetKeyDown(KeyCode.A) && crashWall == false)
         {
             player.localScale = new Vector3(-1, 1, 1);
-            if (isWalk == false&&touchLeftWall==false)
-            {   
+            if (isWalk == false && touchLeftWall == false)
+            {
                 position.x += -1;
                 isWalk = true;
-                
+
             }
-        if (touchLeftWall == true)
+            if (touchLeftWall == true)
             {
                 if (MapManager.IsDamagable(new Vector2Int((int)position.x, (int)position.y + 1), isOpenEye))
                 {
                     PlayerDie();
                 }
                 crashWall = true;
-                transform.position = Vector3.SmoothDamp(transform.position,backLeftPosition ,ref velocity, backSmoothTime);
-                
+                transform.position = Vector3.SmoothDamp(transform.position, backLeftPosition, ref velocity, backSmoothTime);
+
             }
         }
-        
+
         if (Input.GetKeyDown(KeyCode.D) && crashWall == false)
         {
             player.localScale = new Vector3(1, 1, 1);
-            if (isWalk == false&&touchRightWall==false)
+            if (isWalk == false && touchRightWall == false)
             {
                 position.x += 1;
                 isWalk = true;
@@ -177,12 +208,12 @@ public class PlayControl : MonoBehaviour
     }
 
     public void TouchWallEffect()
-    {  
+    {
         touchWall = !MapManager.IsAccessible(new Vector2Int((int)position.x, (int)position.y), isOpenEye);
-        touchUpWall = !MapManager.IsAccessible(new Vector2Int((int)position.x, (int)position.y+1), isOpenEye);
-        touchDownWall= !MapManager.IsAccessible(new Vector2Int((int)position.x, (int)position.y-1), isOpenEye);
-        touchLeftWall= !MapManager.IsAccessible(new Vector2Int((int)position.x-1, (int)position.y), isOpenEye);
-        touchRightWall= !MapManager.IsAccessible(new Vector2Int((int)position.x+1, (int)position.y), isOpenEye);
+        touchUpWall = !MapManager.IsAccessible(new Vector2Int((int)position.x, (int)position.y + 1), isOpenEye);
+        touchDownWall = !MapManager.IsAccessible(new Vector2Int((int)position.x, (int)position.y - 1), isOpenEye);
+        touchLeftWall = !MapManager.IsAccessible(new Vector2Int((int)position.x - 1, (int)position.y), isOpenEye);
+        touchRightWall = !MapManager.IsAccessible(new Vector2Int((int)position.x + 1, (int)position.y), isOpenEye);
 
         //if(position.x > 0.5||position.y > 2.5)    //测试用的
         //{                                         //测试用的        
@@ -228,12 +259,12 @@ public class PlayControl : MonoBehaviour
 
             }
         }
-        
+
     }
 
-    void eyeStateCheck()
+    void EyeStateCheck()
     {
-        if(isOpenEye == PlayerState.Open)
+        if (isOpenEye == PlayerState.Open)
         {
             eyeOpening = true;
         }
@@ -246,7 +277,7 @@ public class PlayControl : MonoBehaviour
     //Animation
     public void SetAnimation()
     {
-        anim.SetBool("isWalk",isWalk);
+        anim.SetBool("isWalk", isWalk);
         anim.SetBool("crashWall", crashWall);
         anim.SetBool("isHurt", isHurt);
         anim.SetBool("eyeOpening", eyeOpening);
