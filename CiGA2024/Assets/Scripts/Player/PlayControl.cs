@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnderCloud;
 using System;
+using UnityEngine.SceneManagement;
 
 public class PlayControl : MonoBehaviour
 {
@@ -32,6 +33,7 @@ public class PlayControl : MonoBehaviour
     bool isBlinking = false;
     [Header("人物受伤")]
     public bool isHurt;
+    public bool isDead;
     [Header("动画相关")]
     private Animator anim;
     public bool crashWall;
@@ -43,7 +45,6 @@ public class PlayControl : MonoBehaviour
     private void FixedUpdate()
     {
         TouchWallEffect();
-
     }
     private void Update()
     {
@@ -58,8 +59,16 @@ public class PlayControl : MonoBehaviour
 
     public void Init()
     {
+        gameObject.SetActive(true);
         isWalk = false;
         isHurt = false;
+        isDead = false;
+        touchWall = false;
+        touchUpWall = false;
+        touchLeftWall = false;
+        touchRightWall = false;
+        touchDownWall = false;
+        anim.SetTrigger("Revive");
         velocity = Vector3.zero;
         //检查摄像机是否只有一个
         GameObject mCamera = GameObject.FindWithTag("MainCamera");
@@ -75,13 +84,13 @@ public class PlayControl : MonoBehaviour
         GameObject pl = GameObject.FindWithTag(TagName.Player);
         if (pl == null)
         {
-            pl = (GameObject)Resources.Load("Prefabs/Player.prefab");
+            pl = Resources.Load<GameObject>("Prefabs/Player");
         }
         if (pl.TryGetComponent(out PlayControl player))
         {
-            player.Init();
             player.transform.position = position;
             player.position = position;
+            player.Init();
         }
         else
             Debug.LogError("加载的玩家资源缺少必要组件");
@@ -92,12 +101,14 @@ public class PlayControl : MonoBehaviour
         if (MapManager.GetTile(new Vector2Int((int)position.x, (int)position.y))?.type == TileType.Exit)
         {
             Messenger.Broadcast(MsgType.playerWin);
+            transform.position = Vector3.zero;
+            position = Vector3.zero;
         }
     }
 
     private void IsStuckInWall()
     {
-        if (touchWall)
+        if (touchWall && !isDead)
         {
             PlayerDie();
         }
@@ -227,7 +238,11 @@ public class PlayControl : MonoBehaviour
     }
     private void PlayerDie()
     {
-        StartCoroutine(DelayDying());
+        if (!isDead)
+        {
+            isDead = true;
+            StartCoroutine(DelayDying());
+        }
     }
 
     IEnumerator DelayDying()
@@ -236,6 +251,8 @@ public class PlayControl : MonoBehaviour
         isHurt = true;
         yield return new WaitForSeconds(1.5f);
         Messenger.Broadcast(MsgType.playerHurt);
+        transform.position = new Vector3(200, 200, 0);
+        position = transform.position;
         yield return null;
     }
 
