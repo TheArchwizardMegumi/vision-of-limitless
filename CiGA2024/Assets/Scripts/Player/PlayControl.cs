@@ -37,6 +37,9 @@ public class PlayControl : MonoBehaviour
     [Header("动画相关")]
     private Animator anim;
     public bool crashWall;
+    [Header("音乐相关")]
+    public AudioSource walk;
+    public AudioSource hitWall;
 
     private void Awake()
     {
@@ -122,6 +125,11 @@ public class PlayControl : MonoBehaviour
         {
             player.position = position;
             isWalk = false;
+        }
+        // audio
+        if (isWalk)
+        {
+            walk.Play();
         }
     }
 
@@ -264,6 +272,8 @@ public class PlayControl : MonoBehaviour
         float time = 0;
         if (crashWall == true)
         {
+            //audio
+            hitWall.Play();
             time++;
             if (time < timer && crashWall == true)
             {
