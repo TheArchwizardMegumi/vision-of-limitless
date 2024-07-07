@@ -9,7 +9,7 @@ using UnityEngine.SceneManagement;
 public class GameManager : Singleton<GameManager>
 {
     public LevelContainer levelContainer;
-    int currentLevelIndex;
+    public int currentLevelIndex;
 
     // void Awake()
     // {
@@ -80,7 +80,8 @@ public class GameManager : Singleton<GameManager>
         if (currentLevelIndex >= levelContainer.levels.Length - 1)
         {
             Debug.Log("No more levels");
-            SceneManager.LoadSceneAsync("Win");
+            SceneManager.LoadSceneAsync("Win", LoadSceneMode.Additive);
+            SceneManager.UnloadSceneAsync(levelContainer.levels[currentLevelIndex].name);
             return;
         }
         currentLevelIndex = PlayerPrefs.GetInt("currentLevelIndex", 0);

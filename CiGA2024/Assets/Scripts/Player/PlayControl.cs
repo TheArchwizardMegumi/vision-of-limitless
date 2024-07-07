@@ -68,6 +68,7 @@ public class PlayControl : MonoBehaviour
         touchLeftWall = false;
         touchRightWall = false;
         touchDownWall = false;
+        isOpenEye = PlayerState.Open;
         anim.SetTrigger("Revive");
         velocity = Vector3.zero;
         //检查摄像机是否只有一个
@@ -100,7 +101,7 @@ public class PlayControl : MonoBehaviour
     {
         if (MapManager.GetTile(new Vector2Int((int)position.x, (int)position.y))?.type == TileType.Exit)
         {
-            Messenger.Broadcast(MsgType.playerWin);
+            Messenger.Broadcast(MsgType.reachExit);
             transform.position = Vector3.zero;
             position = Vector3.zero;
         }
@@ -122,7 +123,6 @@ public class PlayControl : MonoBehaviour
             player.position = position;
             isWalk = false;
         }
-
     }
 
     public void ControlCheck()
@@ -131,91 +131,87 @@ public class PlayControl : MonoBehaviour
         backDownPosition = new Vector3(position.x, position.y - 0.8f, position.z);
         backLeftPosition = new Vector3(position.x - 0.8f, position.y, position.z);
         backRightPosition = new Vector3(position.x + 0.8f, position.y, position.z);
-        if (Input.GetKeyDown(KeyCode.Space) && !isBlinking)
+        if (isHurt == false&&isWalk == false)
         {
-            isBlinking = true;
-            ChangeEyeState();
-            StartCoroutine(Blinking());
-        }
-        if (Input.GetKeyDown(KeyCode.W))
-        {
-            if (isWalk == false && touchUpWall == false && crashWall == false)
+            if (Input.GetKeyDown(KeyCode.Space) && !isBlinking)
             {
-                position.y += 1;
-                isWalk = true;
-
+                isBlinking = true;
+                ChangeEyeState();
+                StartCoroutine(Blinking());
             }
-            if (touchUpWall == true)
+            if (Input.GetKeyDown(KeyCode.W))
             {
-                if (MapManager.IsDamagable(new Vector2Int((int)position.x, (int)position.y + 1), isOpenEye))
+                if (isWalk == false && touchUpWall == false && crashWall == false)
                 {
-                    PlayerDie();
+                    position.y += 1;
+                    isWalk = true;
                 }
-                crashWall = true;
-                transform.position = Vector3.SmoothDamp(transform.position, backUpPosition, ref velocity, backSmoothTime);
-            }
-        }
-        if (Input.GetKeyDown(KeyCode.S))
-        {
-            if (isWalk == false && touchDownWall == false && crashWall == false)
-            {
-                position.y += -1;
-                isWalk = true;
-            }
-            if (touchDownWall == true)
-            {
-                if (MapManager.IsDamagable(new Vector2Int((int)position.x, (int)position.y + 1), isOpenEye))
+                if (touchUpWall == true)
                 {
-                    PlayerDie();
+                    if (MapManager.IsDamagable(new Vector2Int((int)position.x, (int)position.y + 1), isOpenEye))
+                    {
+                        PlayerDie();
+                    }
+                    crashWall = true;
+                    transform.position = Vector3.SmoothDamp(transform.position, backUpPosition, ref velocity, backSmoothTime);
                 }
-                crashWall = true;
-                transform.position = Vector3.SmoothDamp(transform.position, backDownPosition, ref velocity, backSmoothTime);
             }
-
-
-        }
-
-        if (Input.GetKeyDown(KeyCode.A) && crashWall == false)
-        {
-            player.localScale = new Vector3(-1, 1, 1);
-            if (isWalk == false && touchLeftWall == false)
+            if (Input.GetKeyDown(KeyCode.S))
             {
-                position.x += -1;
-                isWalk = true;
-
-            }
-            if (touchLeftWall == true)
-            {
-                if (MapManager.IsDamagable(new Vector2Int((int)position.x, (int)position.y + 1), isOpenEye))
+                if (isWalk == false && touchDownWall == false && crashWall == false)
                 {
-                    PlayerDie();
+                    position.y += -1;
+                    isWalk = true;
                 }
-                crashWall = true;
-                transform.position = Vector3.SmoothDamp(transform.position, backLeftPosition, ref velocity, backSmoothTime);
-
-            }
-        }
-
-        if (Input.GetKeyDown(KeyCode.D) && crashWall == false)
-        {
-            player.localScale = new Vector3(1, 1, 1);
-            if (isWalk == false && touchRightWall == false)
-            {
-                position.x += 1;
-                isWalk = true;
-            }
-            if (touchRightWall == true)
-            {
-                if (MapManager.IsDamagable(new Vector2Int((int)position.x, (int)position.y + 1), isOpenEye))
+                if (touchDownWall == true)
                 {
-                    PlayerDie();
+                    if (MapManager.IsDamagable(new Vector2Int((int)position.x, (int)position.y - 1), isOpenEye))
+                    {
+                        PlayerDie();
+                    }
+                    crashWall = true;
+                    transform.position = Vector3.SmoothDamp(transform.position, backDownPosition, ref velocity, backSmoothTime);
                 }
-                crashWall = true;
-                transform.position = Vector3.SmoothDamp(transform.position, backRightPosition, ref velocity, backSmoothTime);
             }
+            if (Input.GetKeyDown(KeyCode.A))
+            {
+                player.localScale = new Vector3(-1, 1, 1);
+                if (isWalk == false && touchLeftWall == false && crashWall == false)
+                {
+                    position.x += -1;
+                    isWalk = true;
+                }
+                if (touchLeftWall == true)
+                {
+                    if (MapManager.IsDamagable(new Vector2Int((int)position.x - 1, (int)position.y), isOpenEye))
+                    {
+                        PlayerDie();
+                    }
+                    crashWall = true;
+                    transform.position = Vector3.SmoothDamp(transform.position, backLeftPosition, ref velocity, backSmoothTime);
 
+                }
+            }
+            if (Input.GetKeyDown(KeyCode.D))
+            {
+                player.localScale = new Vector3(1, 1, 1);
+                if (isWalk == false && touchRightWall == false && crashWall == false)
+                {
+                    position.x += 1;
+                    isWalk = true;
+                }
+                if (touchRightWall == true)
+                {
+                    if (MapManager.IsDamagable(new Vector2Int((int)position.x + 1, (int)position.y), isOpenEye))
+                    {
+                        PlayerDie();
+                    }
+                    crashWall = true;
+                    transform.position = Vector3.SmoothDamp(transform.position, backRightPosition, ref velocity, backSmoothTime);
+                }
+
+            }
         }
-
     }
 
     public void TouchWallEffect()

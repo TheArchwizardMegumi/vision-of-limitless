@@ -2,8 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using OvO;
-using UnityEditor.SearchService;
-using UnityEngine.SceneManagement;
 using UnityEngine.Tilemaps;
 using System;
 

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7dd8a61b8e4ac0f4184ef464ae909d09, type: 3}
   m_Name: FantasyWall
   m_EditorClassIdentifier: 
-  m_DefaultSprite: {fileID: 21300000, guid: 0032277d34c257944942cd0f614850a3, type: 3}
+  m_DefaultSprite: {fileID: 21300000, guid: e3842c3cce54b414d82578b5f55354f6, type: 3}
   m_DefaultGameObject: {fileID: 0}
   m_DefaultColliderType: 1
   m_TilingRules: []
