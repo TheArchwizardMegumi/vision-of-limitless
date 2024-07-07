@@ -14,6 +14,8 @@ public class EyeUIDissolve : MonoBehaviour
     void Start()
     {
         Messenger.AddListener<PlayerState>(MsgType.changeOpenCloseEye, ChangeEye);
+        Messenger.AddListener(MsgType.playerHurt, OpenEye);
+        Messenger.AddListener(MsgType.playerWin, OpenEye);
     }
 
     void ChangeEye(PlayerState state)

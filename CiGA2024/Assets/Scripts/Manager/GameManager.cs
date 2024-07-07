@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnderCloud;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -34,7 +35,10 @@ public class GameManager : Singleton<GameManager>
 
     public static void LoadLevel(int index)
     {
-        SceneManager.LoadScene("Player", LoadSceneMode.Additive);
+        if (!SceneManager.GetSceneByName("Player").isLoaded)
+        {
+            SceneManager.LoadScene("Player", LoadSceneMode.Additive);
+        }
         Instance.StartCoroutine(LoadSceneCor(Instance.levelContainer.levels[index - 1].name));
         Instance.currentLevelIndex = index-1;
         PlayerPrefs.SetInt("currentLevelIndex", Instance.currentLevelIndex);
@@ -49,6 +53,10 @@ public class GameManager : Singleton<GameManager>
     //将除了通关之外的所有场景加载都改为了这个协程，用于一异步加载完成后触发事件
     private static IEnumerator LoadSceneCor(string name)
     {
+        if (SceneManager.GetSceneByName(name).isLoaded)
+        {
+            SceneManager.UnloadSceneAsync(name);
+        }
         AsyncOperation operation = SceneManager.LoadSceneAsync(name, LoadSceneMode.Additive);
         yield return operation;
         foreach (SceneAsset scene in Instance.levelContainer.levels)
@@ -79,13 +87,19 @@ public class GameManager : Singleton<GameManager>
         SceneManager.UnloadSceneAsync(levelContainer.levels[currentLevelIndex].name);
         currentLevelIndex += 1;
         PlayerPrefs.SetInt("currentLevelIndex", currentLevelIndex);
-        SceneManager.LoadScene("Player", LoadSceneMode.Additive);
+        if (!SceneManager.GetSceneByName("Player").isLoaded)
+        {
+            SceneManager.LoadScene("Player", LoadSceneMode.Additive);
+        }
         StartCoroutine(LoadSceneCor(levelContainer.levels[currentLevelIndex].name));
     }
 
     private void ReloadLevel()
     {
-        SceneManager.LoadScene("Player", LoadSceneMode.Additive);
+        if (!SceneManager.GetSceneByName("Player").isLoaded)
+        {
+            SceneManager.LoadScene("Player", LoadSceneMode.Additive);
+        }
         StartCoroutine(LoadSceneCor(levelContainer.levels[currentLevelIndex].name));
     }
 
