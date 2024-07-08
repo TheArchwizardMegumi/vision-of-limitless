@@ -27,5 +27,8 @@ public class NextLevelUIDissolve : MonoBehaviour
         yield return new WaitForSeconds(time);
         Messenger.Broadcast(MsgType.playerWin);
         DOTween.To(() => iDissolve.effectFactor, x => iDissolve.effectFactor = x, 1f, time);
+        yield return new WaitForSeconds(time*2);
+        iDissolve.effectFactor = 1f;
+        Debug.Log("Set effectFactor to 1f");
     }
 }

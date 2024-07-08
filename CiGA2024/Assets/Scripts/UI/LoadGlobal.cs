@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class Win : MonoBehaviour
+public class LoadGlobal : MonoBehaviour
 {
-    public void LoadMenu()
+    void Awake()
     {
-        SceneManager.LoadScene("MainMenu");
+        SceneManager.LoadSceneAsync("Global", LoadSceneMode.Additive);
     }
 }

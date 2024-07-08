@@ -52,9 +52,13 @@ public class GameManager : Singleton<GameManager>
         {
             SceneManager.LoadScene("Player", LoadSceneMode.Additive);
         }
-        Instance.StartCoroutine(LoadSceneCor(levelName[index - 1]));
-        Instance.currentLevelIndex = index-1;
+        Instance.StartCoroutine(LoadSceneCor(levelName[index]));
+        Instance.currentLevelIndex = index;
         PlayerPrefs.SetInt("currentLevelIndex", Instance.currentLevelIndex);
+        if (SceneManager.GetSceneByName("MainMenu").isLoaded)
+        {
+            SceneManager.UnloadSceneAsync("MainMenu");
+        }
     }
     private static IEnumerator LoadSceneCor(string name)
     {
