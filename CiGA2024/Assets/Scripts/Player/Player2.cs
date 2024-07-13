@@ -6,7 +6,7 @@ using System;
 using UnityEngine.SceneManagement;
 using UnityEngine.Rendering;
 
-public class PlayControl : MonoBehaviour
+public class Player2: MonoBehaviour
 {
     [Header("控制相关")]
     public Transform player;
@@ -109,7 +109,6 @@ public class PlayControl : MonoBehaviour
             Messenger.Broadcast(MsgType.reachExit);
             transform.position = Vector3.zero;
             position = Vector3.zero;
-
         }
     }
 
@@ -157,7 +156,6 @@ public class PlayControl : MonoBehaviour
                 {
                     position.y += 1;
                     isWalk = true;
-                    
                 }
                 if (touchUpWall == true)
                 {
@@ -263,7 +261,7 @@ public class PlayControl : MonoBehaviour
         isHurt = true;
         yield return new WaitForSeconds(1.5f);
         Messenger.Broadcast(MsgType.playerHurt);
-        transform.position = new Vector3(200, 200, 0);
+        transform.position = new Vector3(200 ,200 , 0);
         position = transform.position;
         yield return null;
     }
@@ -276,7 +274,7 @@ public class PlayControl : MonoBehaviour
 
     public void Timer()
     {
-        float timer = 4;
+        float timer = 2;
         float time = 0;
         if (crashWall == true)
         {
@@ -287,6 +285,7 @@ public class PlayControl : MonoBehaviour
             {
                 crashWall = false;
                 time = 0;
+
             }
         }
 
