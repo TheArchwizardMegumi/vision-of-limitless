@@ -4,6 +4,7 @@ using UnityEngine;
 using UnderCloud;
 using System;
 using UnityEngine.SceneManagement;
+using UnityEngine.Rendering;
 
 public class PlayControl : MonoBehaviour
 {
@@ -26,6 +27,7 @@ public class PlayControl : MonoBehaviour
     public Vector3 backRightPosition;
     public float backSmoothTime;
     public float distance;
+    public SortingGroup sortingGroup;
     [Header("睁眼闭眼")]
     public PlayerState isOpenEye = PlayerState.Open;
     public float blinkTime = 0.5f;
@@ -37,6 +39,9 @@ public class PlayControl : MonoBehaviour
     [Header("动画相关")]
     private Animator anim;
     public bool crashWall;
+    [Header("音乐相关")]
+    public AudioSource walk;
+    public AudioSource hitWall;
 
     private void Awake()
     {
@@ -104,6 +109,7 @@ public class PlayControl : MonoBehaviour
             Messenger.Broadcast(MsgType.reachExit);
             transform.position = Vector3.zero;
             position = Vector3.zero;
+
         }
     }
 
@@ -123,6 +129,11 @@ public class PlayControl : MonoBehaviour
             player.position = position;
             isWalk = false;
         }
+        // audio
+        if (isWalk)
+        {
+            walk.Play();
+        }
     }
 
     public void ControlCheck()
@@ -141,10 +152,12 @@ public class PlayControl : MonoBehaviour
             }
             if (Input.GetKeyDown(KeyCode.W))
             {
+                sortingGroup.sortingLayerName = "Player";
                 if (isWalk == false && touchUpWall == false && crashWall == false)
                 {
                     position.y += 1;
                     isWalk = true;
+                    
                 }
                 if (touchUpWall == true)
                 {
@@ -165,6 +178,7 @@ public class PlayControl : MonoBehaviour
                 }
                 if (touchDownWall == true)
                 {
+                    sortingGroup.sortingLayerName = "CrashLayer";
                     if (MapManager.IsDamagable(new Vector2Int((int)position.x, (int)position.y - 1), isOpenEye))
                     {
                         PlayerDie();
@@ -175,6 +189,7 @@ public class PlayControl : MonoBehaviour
             }
             if (Input.GetKeyDown(KeyCode.A))
             {
+                sortingGroup.sortingLayerName = "Player";
                 player.localScale = new Vector3(-1, 1, 1);
                 if (isWalk == false && touchLeftWall == false && crashWall == false)
                 {
@@ -194,6 +209,7 @@ public class PlayControl : MonoBehaviour
             }
             if (Input.GetKeyDown(KeyCode.D))
             {
+                sortingGroup.sortingLayerName = "Player";
                 player.localScale = new Vector3(1, 1, 1);
                 if (isWalk == false && touchRightWall == false && crashWall == false)
                 {
@@ -260,16 +276,17 @@ public class PlayControl : MonoBehaviour
 
     public void Timer()
     {
-        float timer = 2;
+        float timer = 4;
         float time = 0;
         if (crashWall == true)
         {
+            //audio
+            hitWall.Play();
             time++;
             if (time < timer && crashWall == true)
             {
                 crashWall = false;
                 time = 0;
-
             }
         }
 

@@ -14,7 +14,7 @@ namespace UnderCloud
         public MapManager()
         {
             tiles ??= new Dictionary<Vector2Int, BaseWallController>();
-            //ÉèÖÃ±ä»¯Ç½³õÊ¼Í¼²ã
+            //ï¿½ï¿½ï¿½Ã±ä»¯Ç½ï¿½ï¿½Ê¼Í¼ï¿½ï¿½
             GlobalData.TransformWallLayerNum = 0;
         }
         public static void InitWhenLevelStart()
@@ -27,10 +27,10 @@ namespace UnderCloud
             PlayControl.SpawnPlayer(spawnPoint);
         }
         /// <summary>
-        /// »ñÈ¡Ò»¸ö¾ßÌåµØ¿éµÄÐÅÏ¢
+        /// ï¿½ï¿½È¡Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ø¿ï¿½ï¿½ï¿½ï¿½Ï¢
         /// </summary>
-        /// <param name="position">µØ¿éËùÔÚÎ»ÖÃ</param>
-        /// <param name="playerState">Íæ¼Òµ±Ç°ÕöÑÛ±ÕÑÛ×´Ì¬</param>
+        /// <param name="position">ï¿½Ø¿ï¿½ï¿½ï¿½ï¿½ï¿½Î»ï¿½ï¿½</param>
+        /// <param name="playerState">ï¿½ï¿½Òµï¿½Ç°ï¿½ï¿½ï¿½Û±ï¿½ï¿½ï¿½×´Ì¬</param>
         /// <returns></returns>
         public static BaseWallController GetTile(Vector2Int position)
         {
@@ -42,10 +42,10 @@ namespace UnderCloud
                 return null;
         }
         /// <summary>
-        /// Ò»¸öµØ¿éÄÜ·ñÍ¨ÐÐ
+        /// Ò»ï¿½ï¿½ï¿½Ø¿ï¿½ï¿½Ü·ï¿½Í¨ï¿½ï¿½
         /// </summary>
-        /// <param name="position">µØ¿éËùÔÚÎ»ÖÃ</param>
-        /// <param name="playerState">Íæ¼Òµ±Ç°ÕöÑÛ±ÕÑÛ×´Ì¬</param>
+        /// <param name="position">ï¿½Ø¿ï¿½ï¿½ï¿½ï¿½ï¿½Î»ï¿½ï¿½</param>
+        /// <param name="playerState">ï¿½ï¿½Òµï¿½Ç°ï¿½ï¿½ï¿½Û±ï¿½ï¿½ï¿½×´Ì¬</param>
         /// <returns></returns>
         public static bool IsAccessible(Vector2Int position, PlayerState playerState)
         {
@@ -60,10 +60,10 @@ namespace UnderCloud
                 return true;
         }
         /// <summary>
-        /// Ò»¸öµØ¿éÊÇ·ñÄÜ¶ÔÍæ¼ÒÔì³ÉÉËº¦
+        /// Ò»ï¿½ï¿½ï¿½Ø¿ï¿½ï¿½Ç·ï¿½ï¿½Ü¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ëºï¿½
         /// </summary>
-        /// <param name="position">µØ¿éËùÔÚÎ»ÖÃ</param>
-        /// <param name="playerState">Íæ¼Òµ±Ç°ÕöÑÛ±ÕÑÛ×´Ì¬</param>
+        /// <param name="position">ï¿½Ø¿ï¿½ï¿½ï¿½ï¿½ï¿½Î»ï¿½ï¿½</param>
+        /// <param name="playerState">ï¿½ï¿½Òµï¿½Ç°ï¿½ï¿½ï¿½Û±ï¿½ï¿½ï¿½×´Ì¬</param>
         /// <returns></returns>
         public static bool IsDamagable(Vector2Int position, PlayerState playerState)
         {
@@ -78,12 +78,12 @@ namespace UnderCloud
                 return false;
         }
         /// <summary>
-        /// Çå³ýµØÍ¼Êý¾Ý£¬¼ÓÔØÒ»¸öÐÂµÄ¹Ø¿¨
+        /// ï¿½ï¿½ï¿½ï¿½ï¿½Í¼ï¿½ï¿½ï¿½Ý£ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ÂµÄ¹Ø¿ï¿½
         /// </summary>
-        /// <param name="levelNum">¹Ø¿¨ÐòºÅ</param>
+        /// <param name="levelNum">ï¿½Ø¿ï¿½ï¿½ï¿½ï¿½</param>
         public static void LoadMapOfCurrentLevel()
         {
-            //É¨Ãè²¢Â¼Èëµ±Ç°µØÍ¼
+            //É¨ï¿½è²¢Â¼ï¿½ëµ±Ç°ï¿½ï¿½Í¼
             tiles ??= new Dictionary<Vector2Int, BaseWallController>();
             tiles.Clear();
             spawnPoint = Vector3.zero;
@@ -91,7 +91,7 @@ namespace UnderCloud
             TileBase tile;
             GameObject parent = GameObject.FindWithTag(TagName.TileMap);
             GameObject child;
-            //Ë¢ÐÂ±ä»¯Ç½Í¼²ã×´Ì¬
+            //Ë¢ï¿½Â±ä»¯Ç½Í¼ï¿½ï¿½×´Ì¬
             parent.transform.GetChild(GlobalData.TransformWallLayerNum).gameObject.SetActive(true);
             parent.transform.GetChild(1 - GlobalData.TransformWallLayerNum).gameObject.SetActive(false);
 
@@ -125,7 +125,7 @@ namespace UnderCloud
                     }
                     else
                     {
-                        Debug.LogError($"MapµÄµÚ{c}¸ö×ÓÎïÌåÃ»ÓÐTilemap×é¼þ");
+                        Debug.LogError($"Mapï¿½Äµï¿½{c}ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½Tilemapï¿½ï¿½ï¿½");
                     }
                 }
             }
@@ -138,7 +138,7 @@ namespace UnderCloud
             }
         }
         /// <summary>
-        /// ÇÐ»»±ä»¯Ç½×´Ì¬
+        /// ï¿½Ð»ï¿½ï¿½ä»¯Ç½×´Ì¬
         /// </summary>
         public static void SwitchTransformWallState(PlayerState playerState)
         {
