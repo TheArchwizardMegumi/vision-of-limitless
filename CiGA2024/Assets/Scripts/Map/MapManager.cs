@@ -10,28 +10,24 @@ namespace UnderCloud
     public class MapManager : Singleton<MapManager>
     {
         private static Dictionary<Vector2Int, BaseWallController> tiles;
-        private static Vector3 spawnPoint;
+        private static Vector3[] spawnPoint = new Vector3[2];
         public MapManager()
         {
             tiles ??= new Dictionary<Vector2Int, BaseWallController>();
-            //���ñ仯ǽ��ʼͼ��
             GlobalData.TransformWallLayerNum = 0;
         }
         public static void InitWhenLevelStart()
         {
             tiles ??= new Dictionary<Vector2Int, BaseWallController>();
             GlobalData.TransformWallLayerNum = 0;
-            spawnPoint = Vector3.zero;
+            spawnPoint[0] = Vector3.zero;
+            spawnPoint[1] = Vector3.zero;
 
             LoadMapOfCurrentLevel();
-            PlayControl.SpawnPlayer(spawnPoint);
+            PlayControl.SpawnPlayer(spawnPoint[0]);
+            Player2.SpawnPlayer(spawnPoint[1]);
         }
-        /// <summary>
-        /// ��ȡһ������ؿ����Ϣ
-        /// </summary>
-        /// <param name="position">�ؿ�����λ��</param>
-        /// <param name="playerState">��ҵ�ǰ���۱���״̬</param>
-        /// <returns></returns>
+
         public static BaseWallController GetTile(Vector2Int position)
         {
             if (tiles.TryGetValue(position, out BaseWallController tile))
@@ -41,12 +37,7 @@ namespace UnderCloud
             else
                 return null;
         }
-        /// <summary>
-        /// һ���ؿ��ܷ�ͨ��
-        /// </summary>
-        /// <param name="position">�ؿ�����λ��</param>
-        /// <param name="playerState">��ҵ�ǰ���۱���״̬</param>
-        /// <returns></returns>
+
         public static bool IsAccessible(Vector2Int position, PlayerState playerState)
         {
             if (tiles.TryGetValue(position, out BaseWallController tile))
@@ -59,12 +50,7 @@ namespace UnderCloud
             else
                 return true;
         }
-        /// <summary>
-        /// һ���ؿ��Ƿ��ܶ��������˺�
-        /// </summary>
-        /// <param name="position">�ؿ�����λ��</param>
-        /// <param name="playerState">��ҵ�ǰ���۱���״̬</param>
-        /// <returns></returns>
+
         public static bool IsDamagable(Vector2Int position, PlayerState playerState)
         {
             if (tiles.TryGetValue(position, out BaseWallController tile))
@@ -77,21 +63,21 @@ namespace UnderCloud
             else
                 return false;
         }
-        /// <summary>
-        /// �����ͼ���ݣ�����һ���µĹؿ�
-        /// </summary>
-        /// <param name="levelNum">�ؿ����</param>
+
         public static void LoadMapOfCurrentLevel()
         {
             //ɨ�貢¼�뵱ǰ��ͼ
             tiles ??= new Dictionary<Vector2Int, BaseWallController>();
             tiles.Clear();
-            spawnPoint = Vector3.zero;
+            for (int i = 0; i < spawnPoint.Length; i++)
+            {
+                spawnPoint[i] = Vector3.zero;
+            }
 
             TileBase tile;
             GameObject parent = GameObject.FindWithTag(TagName.TileMap);
             GameObject child;
-            //ˢ�±仯ǽͼ��״̬
+            int SPCount = 0;
             parent.transform.GetChild(GlobalData.TransformWallLayerNum).gameObject.SetActive(true);
             parent.transform.GetChild(1 - GlobalData.TransformWallLayerNum).gameObject.SetActive(false);
 
@@ -116,7 +102,10 @@ namespace UnderCloud
                                             tiles.Add(new Vector2Int(i, j), GenerateTile(customTile.type));
                                         }
                                         if (customTile.type == TileType.SpawnPoint)
-                                            spawnPoint = new Vector3(i, j, 0);
+                                        {
+                                            spawnPoint[SPCount] = new Vector3(i, j, 0);
+                                            SPCount++;
+                                        }
                                         //map.SetTransformMatrix(new Vector3Int(i, j, 0), Matrix4x4.TRS(new Vector3(i, j, j * 1f), Quaternion.identity, Vector3.one));
                                     }
                                 }
