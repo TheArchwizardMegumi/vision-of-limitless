@@ -34,8 +34,14 @@ public class Pause : MonoBehaviour
 
     public void Restart()
     {
+        int currentLevelIndex = PlayerPrefs.GetInt("currentLevelIndex", 0);
+        Messenger.Broadcast(MsgType.levelStart);
         Time.timeScale = 1;
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        string currentLevelName = "Level" + currentLevelIndex.ToString();
+        SceneManager.UnloadSceneAsync(currentLevelName).completed += (AsyncOperation op) =>
+        {
+            SceneManager.LoadSceneAsync(currentLevelName, LoadSceneMode.Additive);
+        };
     }
 
     public void LoadMenu()

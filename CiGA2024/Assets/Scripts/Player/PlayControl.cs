@@ -4,9 +4,11 @@ using UnityEngine;
 using UnderCloud;
 using System;
 using UnityEngine.SceneManagement;
+using UnityEngine.Rendering;
 
 public class PlayControl : MonoBehaviour
 {
+    public static PlayControl Instance;
     [Header("控制相关")]
     public Transform player;
     private Vector3 velocity = Vector3.zero;
@@ -26,6 +28,7 @@ public class PlayControl : MonoBehaviour
     public Vector3 backRightPosition;
     public float backSmoothTime;
     public float distance;
+    public SortingGroup sortingGroup;
     [Header("睁眼闭眼")]
     public PlayerState isOpenEye = PlayerState.Open;
     public float blinkTime = 0.5f;
@@ -37,9 +40,13 @@ public class PlayControl : MonoBehaviour
     [Header("动画相关")]
     private Animator anim;
     public bool crashWall;
+    [Header("音乐相关")]
+    public AudioSource walk;
+    public AudioSource hitWall;
 
     private void Awake()
     {
+        Instance = this;
         anim = GetComponent<Animator>();
     }
     private void FixedUpdate()
@@ -71,37 +78,53 @@ public class PlayControl : MonoBehaviour
         isOpenEye = PlayerState.Open;
         anim.SetTrigger("Revive");
         velocity = Vector3.zero;
+        SwitchCameraFollow(true);
+    }
+
+    private void SwitchCameraFollow(bool onOff)
+    {
         //检查摄像机是否只有一个
-        GameObject mCamera = GameObject.FindWithTag("MainCamera");
-        if (mCamera)
+        GameObject[] mCamera = GameObject.FindGameObjectsWithTag("MainCamera");
+        if (mCamera.Length > 1)
         {
-            mCamera.SetActive(false);
+            for (int i = 1; i < mCamera.Length; i++)
+            {
+                Destroy(mCamera[i]);
+            }
+            mCamera[0].transform.SetParent(transform);
+        }
+        if (onOff)
+        {
             transform.GetChild(0).gameObject.SetActive(true);
+        }
+        else
+        {
+            transform.GetChild(0).transform.SetParent(null);
         }
     }
 
     public static void SpawnPlayer(Vector3 position)
     {
-        GameObject pl = GameObject.FindWithTag(TagName.Player);
-        if (pl == null)
+        if (Instance == null)
         {
-            pl = Resources.Load<GameObject>("Prefabs/Player");
-        }
-        if (pl.TryGetComponent(out PlayControl player))
-        {
-            player.transform.position = position;
-            player.position = position;
-            player.Init();
+            return;
         }
         else
-            Debug.LogError("加载的玩家资源缺少必要组件");
+        {
+            Instance.gameObject.SetActive(true);
+            Instance.transform.position = position;
+            Instance.position = position;
+            Instance.Init();
+        }
     }
 
     private void CheckWin()
     {
         if (MapManager.GetTile(new Vector2Int((int)position.x, (int)position.y))?.type == TileType.Exit)
         {
-            Messenger.Broadcast(MsgType.reachExit);
+            gameObject.SetActive(false);
+            SwitchCameraFollow(false);
+            PlayerWinChecker.ReachExit(0, new Vector2Int((int)position.x, (int)position.y));
             transform.position = Vector3.zero;
             position = Vector3.zero;
         }
@@ -123,6 +146,11 @@ public class PlayControl : MonoBehaviour
             player.position = position;
             isWalk = false;
         }
+        // audio
+        if (isWalk)
+        {
+            walk.Play();
+        }
     }
 
     public void ControlCheck()
@@ -141,10 +169,12 @@ public class PlayControl : MonoBehaviour
             }
             if (Input.GetKeyDown(KeyCode.W))
             {
+                sortingGroup.sortingLayerName = "Player";
                 if (isWalk == false && touchUpWall == false && crashWall == false)
                 {
                     position.y += 1;
                     isWalk = true;
+                    
                 }
                 if (touchUpWall == true)
                 {
@@ -165,6 +195,7 @@ public class PlayControl : MonoBehaviour
                 }
                 if (touchDownWall == true)
                 {
+                    sortingGroup.sortingLayerName = "CrashLayer";
                     if (MapManager.IsDamagable(new Vector2Int((int)position.x, (int)position.y - 1), isOpenEye))
                     {
                         PlayerDie();
@@ -175,6 +206,7 @@ public class PlayControl : MonoBehaviour
             }
             if (Input.GetKeyDown(KeyCode.A))
             {
+                sortingGroup.sortingLayerName = "Player";
                 player.localScale = new Vector3(-1, 1, 1);
                 if (isWalk == false && touchLeftWall == false && crashWall == false)
                 {
@@ -194,6 +226,7 @@ public class PlayControl : MonoBehaviour
             }
             if (Input.GetKeyDown(KeyCode.D))
             {
+                sortingGroup.sortingLayerName = "Player";
                 player.localScale = new Vector3(1, 1, 1);
                 if (isWalk == false && touchRightWall == false && crashWall == false)
                 {
@@ -260,16 +293,17 @@ public class PlayControl : MonoBehaviour
 
     public void Timer()
     {
-        float timer = 2;
+        float timer = 4;
         float time = 0;
         if (crashWall == true)
         {
+            //audio
+            hitWall.Play();
             time++;
             if (time < timer && crashWall == true)
             {
                 crashWall = false;
                 time = 0;
-
             }
         }
 
