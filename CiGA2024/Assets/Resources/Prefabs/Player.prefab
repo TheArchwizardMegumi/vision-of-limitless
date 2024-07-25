@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 231594747}
   m_Layer: 0
   m_Name: FollowingCamera
-  m_TagString: MainCamera
+  m_TagString: FollowingCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -307,6 +307,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc08014d4897c154890ed839d953ade6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mCamera: {fileID: 231594748}
   player: {fileID: 5794453805006094020}
   smoothTime: 0.1
   position: {x: 0, y: 0, z: 0}

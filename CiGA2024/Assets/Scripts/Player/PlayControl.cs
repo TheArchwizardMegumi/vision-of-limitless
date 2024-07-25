@@ -9,6 +9,8 @@ using UnityEngine.Rendering;
 public class PlayControl : MonoBehaviour
 {
     public static PlayControl Instance;
+    [SerializeField]
+    private Camera mCamera;
     [Header("控制相关")]
     public Transform player;
     private Vector3 velocity = Vector3.zero;
@@ -83,23 +85,15 @@ public class PlayControl : MonoBehaviour
 
     private void SwitchCameraFollow(bool onOff)
     {
-        //检查摄像机是否只有一个
-        GameObject[] mCamera = GameObject.FindGameObjectsWithTag("MainCamera");
-        if (mCamera.Length > 1)
-        {
-            for (int i = 1; i < mCamera.Length; i++)
-            {
-                Destroy(mCamera[i]);
-            }
-            mCamera[0].transform.SetParent(transform);
-        }
         if (onOff)
         {
+            mCamera.transform.SetParent(transform);
             transform.GetChild(0).gameObject.SetActive(true);
+            mCamera.transform.position = new Vector3(0, 0, -10);
         }
         else
         {
-            transform.GetChild(0).transform.SetParent(null);
+            mCamera.transform.SetParent(null);
         }
     }
 
