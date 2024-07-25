@@ -7,15 +7,18 @@ using UnityEngine;
 public static class PlayerWinChecker
 {
     public static int playerNum = 2;
-    private static bool[] playerStandingOnExit = new bool[playerNum];
+    private static readonly bool[] playerStandingOnExit = new bool[playerNum];
     public static void Init()
     {
-        playerStandingOnExit = new bool[playerNum];
+        for (int i = 0; i < playerNum; i++)
+        {
+            playerStandingOnExit[i] = false;
+        }
     }
-    public static void ReachExit(int playerNum, Vector2Int position)
+    public static void ReachExit(int playerNumer, Vector2Int position)
     {
         PlayWinEffect(position);
-        playerStandingOnExit[playerNum] = true;
+        playerStandingOnExit[playerNumer] = true;
         for (int i = 0; i < playerNum; i++)
         {
             if (!playerStandingOnExit[i])
@@ -28,6 +31,7 @@ public static class PlayerWinChecker
 
     private static void EndLevel()
     {
+        Init();
         Messenger.Broadcast(MsgType.reachExit);
         Timer.RemoveTimer(Timer.GetTimers("DelayEndLevel").First());
     }

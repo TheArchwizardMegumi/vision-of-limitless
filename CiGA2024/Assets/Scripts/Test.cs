@@ -13,7 +13,6 @@ public class Test : MonoBehaviour
     }
     private IEnumerator TestCor()
     {
-        SceneManager.UnloadSceneAsync("SelectLevel");
-        yield return null;
+        yield break;
     }
 }

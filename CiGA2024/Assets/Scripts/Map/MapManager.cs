@@ -4,6 +4,7 @@ using UnityEngine;
 using OvO;
 using UnityEngine.Tilemaps;
 using System;
+using UnityEngine.Playables;
 
 namespace UnderCloud
 {
@@ -38,6 +39,19 @@ namespace UnderCloud
                 return null;
         }
 
+        public static bool IsPlayer(Vector2Int position)
+        {
+            if ((int)PlayControl.Instance.position.x == position.x && (int)PlayControl.Instance.position.y == position.y)
+            {
+                return true;
+            }
+            if ((int)Player2.Instance.position.x == position.x && (int)Player2.Instance.position.y == position.y)
+            {
+                return true;
+            }
+            return false;
+        }
+
         public static bool IsAccessible(Vector2Int position, PlayerState playerState)
         {
             if (tiles.TryGetValue(position, out BaseWallController tile))
@@ -66,7 +80,6 @@ namespace UnderCloud
 
         public static void LoadMapOfCurrentLevel()
         {
-            //ɨ�貢¼�뵱ǰ��ͼ
             tiles ??= new Dictionary<Vector2Int, BaseWallController>();
             tiles.Clear();
             for (int i = 0; i < spawnPoint.Length; i++)
