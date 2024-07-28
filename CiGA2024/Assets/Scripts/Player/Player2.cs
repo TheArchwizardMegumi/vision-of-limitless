@@ -19,7 +19,7 @@ public class Player2: MonoBehaviour
     public bool walking;
     Vector2 dir;
     [Header("撞墙相关")]
-    public int timer = 90;
+    public int timer = 80;
     public int time;
     public bool touchWall;
     public bool touchUpWall;
