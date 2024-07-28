@@ -5,6 +5,7 @@ using UnderCloud;
 using System;
 using UnityEngine.SceneManagement;
 using UnityEngine.Rendering;
+using Unity.VisualScripting;
 
 public class Player2: MonoBehaviour
 {
@@ -15,13 +16,24 @@ public class Player2: MonoBehaviour
     public float smoothTime;
     public Vector3 position;
     public bool isWalk;
+    public bool walking;
     Vector2 dir;
     [Header("撞墙相关")]
+    public int timer = 90;
+    public int time;
     public bool touchWall;
     public bool touchUpWall;
     public bool touchDownWall;
     public bool touchLeftWall;
     public bool touchRightWall;
+    public bool upBesidePlayer;
+    public bool downBesidePlayer;
+    public bool leftBesidePlayer;
+    public bool rightBesidePlayer;
+    public bool upBesidePlayerTouchWall;
+    public bool downBesidePlayerTouchWall;
+    public bool leftBesidePlayerTouchWall;
+    public bool rightBesidePlayerTouchWall;
     public Vector3 backUpPosition;
     public Vector3 backLeftPosition;
     public Vector3 backDownPosition;
@@ -52,11 +64,16 @@ public class Player2: MonoBehaviour
     private void FixedUpdate()
     {
         TouchWallEffect();
+        if (eyeOpening == false)
+        {
+            sortingGroup.sortingLayerName = "Player";
+        }
     }
     private void Update()
     {
         CheckWin();
         Timer();
+        WalkTimer();
         Move();
         IsStuckInWall();
         EyeStateCheck();
@@ -146,36 +163,41 @@ public class Player2: MonoBehaviour
             if (Input.GetKeyDown(KeyCode.W))
             {
                 sortingGroup.sortingLayerName = "Player";
-                if (isWalk == false && touchUpWall == false && crashWall == false)
+                if (walking == false && isWalk == false && touchUpWall == false && crashWall == false && (upBesidePlayer == false || upBesidePlayerTouchWall == false))
                 {
                     position.y += 1;
                     isWalk = true;
                 }
-                if (touchUpWall == true)
+                if (touchUpWall == true || upBesidePlayer == true && upBesidePlayerTouchWall == true)
                 {
                     if (MapManager.IsDamagable(new Vector2Int((int)position.x, (int)position.y + 1), isOpenEye))
                     {
                         PlayerDie();
                     }
                     crashWall = true;
+                    walking = true;
                     transform.position = Vector3.SmoothDamp(transform.position, backUpPosition, ref velocity, backSmoothTime);
                 }
             }
             if (Input.GetKeyDown(KeyCode.S))
             {
-                if (isWalk == false && touchDownWall == false && crashWall == false)
+                if (walking == false && isWalk == false && touchDownWall == false && crashWall == false && (downBesidePlayer == false || downBesidePlayerTouchWall == false))
                 {
                     position.y += -1;
                     isWalk = true;
                 }
-                if (touchDownWall == true)
+                if (touchDownWall == true || downBesidePlayer == true && downBesidePlayerTouchWall == true)
                 {
-                    sortingGroup.sortingLayerName = "CrashLayer";
+                    if (eyeOpening == true)
+                    {
+                        sortingGroup.sortingLayerName = "CrashLayer";
+                    }
                     if (MapManager.IsDamagable(new Vector2Int((int)position.x, (int)position.y - 1), isOpenEye))
                     {
                         PlayerDie();
                     }
                     crashWall = true;
+                    walking = true;
                     transform.position = Vector3.SmoothDamp(transform.position, backDownPosition, ref velocity, backSmoothTime);
                 }
             }
@@ -183,18 +205,19 @@ public class Player2: MonoBehaviour
             {
                 sortingGroup.sortingLayerName = "Player";
                 player.localScale = new Vector3(-1, 1, 1);
-                if (isWalk == false && touchLeftWall == false && crashWall == false)
+                if (walking == false && isWalk == false && touchLeftWall == false && crashWall == false && (leftBesidePlayer == false || leftBesidePlayerTouchWall == false))
                 {
                     position.x += -1;
                     isWalk = true;
                 }
-                if (touchLeftWall == true)
+                if (touchLeftWall == true || leftBesidePlayer == true && leftBesidePlayerTouchWall == true)
                 {
                     if (MapManager.IsDamagable(new Vector2Int((int)position.x - 1, (int)position.y), isOpenEye))
                     {
                         PlayerDie();
                     }
                     crashWall = true;
+                    walking = true;
                     transform.position = Vector3.SmoothDamp(transform.position, backLeftPosition, ref velocity, backSmoothTime);
 
                 }
@@ -203,18 +226,19 @@ public class Player2: MonoBehaviour
             {
                 sortingGroup.sortingLayerName = "Player";
                 player.localScale = new Vector3(1, 1, 1);
-                if (isWalk == false && touchRightWall == false && crashWall == false)
+                if (walking == false && isWalk == false && touchRightWall == false && crashWall == false && (rightBesidePlayer == false || rightBesidePlayerTouchWall == false))
                 {
                     position.x += 1;
                     isWalk = true;
                 }
-                if (touchRightWall == true)
+                if (touchRightWall == true || rightBesidePlayer == true && rightBesidePlayerTouchWall == true)
                 {
                     if (MapManager.IsDamagable(new Vector2Int((int)position.x + 1, (int)position.y), isOpenEye))
                     {
                         PlayerDie();
                     }
                     crashWall = true;
+                    walking = true;
                     transform.position = Vector3.SmoothDamp(transform.position, backRightPosition, ref velocity, backSmoothTime);
                 }
 
@@ -229,7 +253,14 @@ public class Player2: MonoBehaviour
         touchDownWall = !MapManager.IsAccessible(new Vector2Int((int)position.x, (int)position.y - 1), isOpenEye);
         touchLeftWall = !MapManager.IsAccessible(new Vector2Int((int)position.x - 1, (int)position.y), isOpenEye);
         touchRightWall = !MapManager.IsAccessible(new Vector2Int((int)position.x + 1, (int)position.y), isOpenEye);
-
+        upBesidePlayer = MapManager.IsPlayer(new Vector2Int((int)position.x, (int)position.y + 1));
+        downBesidePlayer = MapManager.IsPlayer(new Vector2Int((int)position.x, (int)position.y - 1));
+        leftBesidePlayer = MapManager.IsPlayer(new Vector2Int((int)position.x - 1, (int)position.y));
+        rightBesidePlayer = MapManager.IsPlayer(new Vector2Int((int)position.x + 1, (int)position.y));
+        upBesidePlayerTouchWall = !MapManager.IsAccessible(new Vector2Int((int)position.x, (int)position.y + 2), isOpenEye);
+        downBesidePlayerTouchWall = !MapManager.IsAccessible(new Vector2Int((int)position.x, (int)position.y - 2), isOpenEye);
+        leftBesidePlayerTouchWall = !MapManager.IsAccessible(new Vector2Int((int)position.x - 2, (int)position.y), isOpenEye);
+        rightBesidePlayerTouchWall = !MapManager.IsAccessible(new Vector2Int((int)position.x + 2, (int)position.y), isOpenEye);
         //if(position.x > 0.5||position.y > 2.5)    //测试用的
         //{                                         //测试用的        
         //    touchWall = true;                     //测试用的            
@@ -304,5 +335,19 @@ public class Player2: MonoBehaviour
         anim.SetBool("crashWall", crashWall);
         anim.SetBool("isHurt", isHurt);
         anim.SetBool("eyeOpening", eyeOpening);
+    }
+
+    public void WalkTimer()
+    {
+        if (walking == true)
+        {
+            time++;
+            if (time >= timer)
+            {
+                walking = false;
+                time = 0;
+            }
+        }
+
     }
 }
