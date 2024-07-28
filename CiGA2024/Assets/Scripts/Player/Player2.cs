@@ -8,6 +8,7 @@ using UnityEngine.Rendering;
 
 public class Player2: MonoBehaviour
 {
+    public static Player2 Instance;
     [Header("控制相关")]
     public Transform player;
     private Vector3 velocity = Vector3.zero;
@@ -45,6 +46,7 @@ public class Player2: MonoBehaviour
 
     private void Awake()
     {
+        Instance = this;
         anim = GetComponent<Animator>();
     }
     private void FixedUpdate()
@@ -76,37 +78,29 @@ public class Player2: MonoBehaviour
         isOpenEye = PlayerState.Open;
         anim.SetTrigger("Revive");
         velocity = Vector3.zero;
-        //检查摄像机是否只有一个
-        GameObject mCamera = GameObject.FindWithTag("MainCamera");
-        if (mCamera)
-        {
-            mCamera.SetActive(false);
-            transform.GetChild(0).gameObject.SetActive(true);
-        }
     }
 
     public static void SpawnPlayer(Vector3 position)
     {
-        GameObject pl = GameObject.FindWithTag(TagName.Player);
-        if (pl == null)
+        if (Instance == null)
         {
-            pl = Resources.Load<GameObject>("Prefabs/Player");
-        }
-        if (pl.TryGetComponent(out PlayControl player))
-        {
-            player.transform.position = position;
-            player.position = position;
-            player.Init();
+            return;
         }
         else
-            Debug.LogError("加载的玩家资源缺少必要组件");
+        {
+            Instance.gameObject.SetActive(true);
+            Instance.transform.position = position;
+            Instance.position = position;
+            Instance.Init();
+        }
     }
 
     private void CheckWin()
     {
         if (MapManager.GetTile(new Vector2Int((int)position.x, (int)position.y))?.type == TileType.Exit)
         {
-            Messenger.Broadcast(MsgType.reachExit);
+            gameObject.SetActive(false);
+            PlayerWinChecker.ReachExit(1, new Vector2Int((int)position.x, (int)position.y));
             transform.position = Vector3.zero;
             position = Vector3.zero;
         }

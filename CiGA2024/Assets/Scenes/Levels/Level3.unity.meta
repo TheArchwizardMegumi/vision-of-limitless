@@ -2,6 +2,10 @@ fileFormatVersion: 2
 guid: dd4c42d7546fc12418d92073abd91af9
 DefaultImporter:
   externalObjects: {}
+<<<<<<<< HEAD:CiGA2024/Assets/Scenes/Levels/Level3.unity.meta
+========
+  mainObjectFileID: 0
+>>>>>>>> main:CiGA2024/Assets/Resources/Texures/Tile/Package/DontRemoveWall.asset.meta
   userData: 
   assetBundleName: 
   assetBundleVariant: 
