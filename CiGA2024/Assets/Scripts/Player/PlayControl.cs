@@ -43,11 +43,9 @@ public class PlayControl : MonoBehaviour
     public float backSmoothTime;
     public float distance;
     public SortingGroup sortingGroup;
-    [Header("睁眼闭眼")]
-    public PlayerState isOpenEye = PlayerState.Open;
-    public float blinkTime = 0.5f;
-    public bool eyeOpening;
-    bool isBlinking = false;
+    public PlayerState IsOpenEye => BlinkChecker.Instance.isOpenEye;
+    public bool IsBlinking => BlinkChecker.Instance.isBlinking;
+    public bool EyeOpening => BlinkChecker.Instance.eyeOpening;
     [Header("人物受伤")]
     public bool isHurt;
     public bool isDead;
@@ -74,7 +72,6 @@ public class PlayControl : MonoBehaviour
         Timer();
         Move();
         IsStuckInWall();
-        EyeStateCheck();
         ControlCheck();
         SetAnimation();
     }
@@ -90,24 +87,8 @@ public class PlayControl : MonoBehaviour
         touchLeftWall = false;
         touchRightWall = false;
         touchDownWall = false;
-        isOpenEye = PlayerState.Open;
         anim.SetTrigger("Revive");
         velocity = Vector3.zero;
-        SwitchCameraFollow(true);
-    }
-
-    private void SwitchCameraFollow(bool onOff)
-    {
-        if (onOff)
-        {
-            mCamera.transform.SetParent(transform);
-            transform.GetChild(0).gameObject.SetActive(true);
-            mCamera.transform.position = new Vector3(0, 0, -10);
-        }
-        else
-        {
-            mCamera.transform.SetParent(null);
-        }
     }
 
     public static void SpawnPlayer(Vector3 position)
@@ -130,7 +111,6 @@ public class PlayControl : MonoBehaviour
         if (MapManager.GetTile(new Vector2Int((int)position.x, (int)position.y))?.type == TileType.Exit)
         {
             gameObject.SetActive(false);
-            SwitchCameraFollow(false);
             PlayerWinChecker.ReachExit(0, new Vector2Int((int)position.x, (int)position.y));
             transform.position = Vector3.zero;
             position = Vector3.zero;
@@ -168,12 +148,6 @@ public class PlayControl : MonoBehaviour
         backRightPosition = new Vector3(position.x + 0.8f, position.y, position.z);
         if (isHurt == false && isWalk == false)
         {
-            if (Input.GetKeyDown(KeyCode.Space) && !isBlinking)
-            {
-                isBlinking = true;
-                ChangeEyeState();
-                StartCoroutine(Blinking());
-            }
             if (Input.GetKeyDown(KeyCode.W))
             {
                 sortingGroup.sortingLayerName = "Player";
@@ -184,7 +158,7 @@ public class PlayControl : MonoBehaviour
                 }
                 if (touchUpWall == true || upBesidePlayer == true && upBesidePlayerTouchWall == true)
                 {
-                    if (MapManager.IsDamagable(new Vector2Int((int)position.x, (int)position.y + 1), isOpenEye))
+                    if (MapManager.IsDamagable(new Vector2Int((int)position.x, (int)position.y + 1), IsOpenEye))
                     {
                         PlayerDie();
                     }
@@ -202,11 +176,11 @@ public class PlayControl : MonoBehaviour
                 }
                 if (touchDownWall == true || downBesidePlayer == true && downBesidePlayerTouchWall == true)
                 {
-                    if (eyeOpening == true)
+                    if (EyeOpening == true)
                     {
                         sortingGroup.sortingLayerName = "CrashLayer";
                     }
-                    if (MapManager.IsDamagable(new Vector2Int((int)position.x, (int)position.y - 1), isOpenEye))
+                    if (MapManager.IsDamagable(new Vector2Int((int)position.x, (int)position.y - 1), IsOpenEye))
                     {
                         PlayerDie();
                     }
@@ -226,7 +200,7 @@ public class PlayControl : MonoBehaviour
                 }
                 if (touchLeftWall == true || leftBesidePlayer == true && leftBesidePlayerTouchWall == true)
                 {
-                    if (MapManager.IsDamagable(new Vector2Int((int)position.x - 1, (int)position.y), isOpenEye))
+                    if (MapManager.IsDamagable(new Vector2Int((int)position.x - 1, (int)position.y), IsOpenEye))
                     {
                         PlayerDie();
                     }
@@ -247,7 +221,7 @@ public class PlayControl : MonoBehaviour
                 }
                 if (touchRightWall == true || rightBesidePlayer == true && rightBesidePlayerTouchWall == true)
                 {
-                    if (MapManager.IsDamagable(new Vector2Int((int)position.x + 1, (int)position.y), isOpenEye))
+                    if (MapManager.IsDamagable(new Vector2Int((int)position.x + 1, (int)position.y), IsOpenEye))
                     {
                         PlayerDie();
                     }
@@ -262,29 +236,24 @@ public class PlayControl : MonoBehaviour
 
     public void TouchWallEffect()
     {
-        touchWall = !MapManager.IsAccessible(new Vector2Int((int)position.x, (int)position.y), isOpenEye);
-        touchUpWall = !MapManager.IsAccessible(new Vector2Int((int)position.x, (int)position.y + 1), isOpenEye);
-        touchDownWall = !MapManager.IsAccessible(new Vector2Int((int)position.x, (int)position.y - 1), isOpenEye);
-        touchLeftWall = !MapManager.IsAccessible(new Vector2Int((int)position.x - 1, (int)position.y), isOpenEye);
-        touchRightWall = !MapManager.IsAccessible(new Vector2Int((int)position.x + 1, (int)position.y), isOpenEye);
+        touchWall = !MapManager.IsAccessible(new Vector2Int((int)position.x, (int)position.y), IsOpenEye);
+        touchUpWall = !MapManager.IsAccessible(new Vector2Int((int)position.x, (int)position.y + 1), IsOpenEye);
+        touchDownWall = !MapManager.IsAccessible(new Vector2Int((int)position.x, (int)position.y - 1), IsOpenEye);
+        touchLeftWall = !MapManager.IsAccessible(new Vector2Int((int)position.x - 1, (int)position.y), IsOpenEye);
+        touchRightWall = !MapManager.IsAccessible(new Vector2Int((int)position.x + 1, (int)position.y), IsOpenEye);
         upBesidePlayer = MapManager.IsPlayer(new Vector2Int((int)position.x, (int)position.y + 1));
         downBesidePlayer = MapManager.IsPlayer(new Vector2Int((int)position.x, (int)position.y - 1));
         leftBesidePlayer = MapManager.IsPlayer(new Vector2Int((int)position.x - 1, (int)position.y));
         rightBesidePlayer = MapManager.IsPlayer(new Vector2Int((int)position.x + 1, (int)position.y));
-        upBesidePlayerTouchWall = !MapManager.IsAccessible(new Vector2Int((int)position.x, (int)position.y + 2), isOpenEye);
-        downBesidePlayerTouchWall = !MapManager.IsAccessible(new Vector2Int((int)position.x, (int)position.y - 2), isOpenEye);
-        leftBesidePlayerTouchWall = !MapManager.IsAccessible(new Vector2Int((int)position.x - 2, (int)position.y), isOpenEye);
-        rightBesidePlayerTouchWall = !MapManager.IsAccessible(new Vector2Int((int)position.x + 2, (int)position.y), isOpenEye);
+        upBesidePlayerTouchWall = !MapManager.IsAccessible(new Vector2Int((int)position.x, (int)position.y + 2), IsOpenEye);
+        downBesidePlayerTouchWall = !MapManager.IsAccessible(new Vector2Int((int)position.x, (int)position.y - 2), IsOpenEye);
+        leftBesidePlayerTouchWall = !MapManager.IsAccessible(new Vector2Int((int)position.x - 2, (int)position.y), IsOpenEye);
+        rightBesidePlayerTouchWall = !MapManager.IsAccessible(new Vector2Int((int)position.x + 2, (int)position.y), IsOpenEye);
 
         //if(position.x > 0.5||position.y > 2.5)    //测试用的
         //{                                         //测试用的        
         //    touchWall = true;                     //测试用的            
         //}                                         //测试用的      
-    }
-    private void ChangeEyeState()
-    {
-        isOpenEye = isOpenEye == PlayerState.Open ? PlayerState.Close : PlayerState.Open;
-        Messenger.Broadcast<PlayerState>(MsgType.changeOpenCloseEye, isOpenEye);
     }
     private void PlayerDie()
     {
@@ -306,11 +275,6 @@ public class PlayControl : MonoBehaviour
         yield return null;
     }
 
-    IEnumerator Blinking()
-    {
-        yield return new WaitForSeconds(blinkTime);
-        isBlinking = false;
-    }
 
     public void Timer()
     {
@@ -343,17 +307,7 @@ public class PlayControl : MonoBehaviour
 
     }
 
-    void EyeStateCheck()
-    {
-        if (isOpenEye == PlayerState.Open)
-        {
-            eyeOpening = true;
-        }
-        else
-        {
-            eyeOpening = false;
-        }
-    }
+
 
     //Animation
     public void SetAnimation()
@@ -361,6 +315,6 @@ public class PlayControl : MonoBehaviour
         anim.SetBool("isWalk", isWalk);
         anim.SetBool("crashWall", crashWall);
         anim.SetBool("isHurt", isHurt);
-        anim.SetBool("eyeOpening", eyeOpening);
+        anim.SetBool("eyeOpening", EyeOpening);
     }
 }
