@@ -26,7 +26,29 @@ namespace UnderCloud
 
             LoadMapOfCurrentLevel();
             PlayControl.SpawnPlayer(spawnPoint[0]);
-            Player2.SpawnPlayer(spawnPoint[1]);
+            if (FindObjectOfType<LevelInfo>().Chapter == 2)
+            {
+                Player2.SpawnPlayer(spawnPoint[1]);
+            }
+            else
+            {
+                Player2.Instance.gameObject.SetActive(false);
+            }
+            CountPlayerNum();
+        }
+
+        private static void CountPlayerNum()
+        {
+            GameObject[] pls = GameObject.FindGameObjectsWithTag("Player");
+            if (pls.Length == 0)
+            {
+                Debug.LogError("player num is 0");
+            }
+            PlayerWinChecker.playerNum = 0;
+            for (int i = 0; i < pls.Length; i++)
+            {
+                PlayerWinChecker.playerNum++;
+            }
         }
 
         public static BaseWallController GetTile(Vector2Int position)
