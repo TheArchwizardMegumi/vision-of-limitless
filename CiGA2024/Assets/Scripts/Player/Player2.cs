@@ -76,7 +76,6 @@ public class Player2: MonoBehaviour
         WalkTimer();
         Move();
         IsStuckInWall();
-        EyeStateCheck();
         ControlCheck();
         SetAnimation();
     }
@@ -154,12 +153,6 @@ public class Player2: MonoBehaviour
         backRightPosition = new Vector3(position.x + 0.8f, position.y, position.z);
         if (isHurt == false&&isWalk == false)
         {
-            if (Input.GetKeyDown(KeyCode.Space) && !isBlinking)
-            {
-                isBlinking = true;
-                ChangeEyeState();
-                StartCoroutine(Blinking());
-            }
             if (Input.GetKeyDown(KeyCode.W))
             {
                 sortingGroup.sortingLayerName = "Player";
@@ -266,11 +259,6 @@ public class Player2: MonoBehaviour
         //    touchWall = true;                     //测试用的            
         //}                                         //测试用的      
     }
-    private void ChangeEyeState()
-    {
-        isOpenEye = isOpenEye == PlayerState.Open ? PlayerState.Close : PlayerState.Open;
-        Messenger.Broadcast<PlayerState>(MsgType.changeOpenCloseEye, isOpenEye);
-    }
     private void PlayerDie()
     {
         if (!isDead)
@@ -314,18 +302,6 @@ public class Player2: MonoBehaviour
             }
         }
 
-    }
-
-    void EyeStateCheck()
-    {
-        if (isOpenEye == PlayerState.Open)
-        {
-            eyeOpening = true;
-        }
-        else
-        {
-            eyeOpening = false;
-        }
     }
 
     //Animation
