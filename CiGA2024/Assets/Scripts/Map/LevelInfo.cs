@@ -5,5 +5,5 @@ using UnityEngine;
 public class LevelInfo : MonoBehaviour
 {
     public int level;
-    public int Chapter => level < 10 ? 1 : 2;
+    public int Chapter => level < 11 ? 1 : 2;
 }

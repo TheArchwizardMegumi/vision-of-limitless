@@ -9,19 +9,16 @@ namespace UnderCloud
     {
         public readonly TileType type;
         protected bool isAccessibleOpen;
-        public bool IsAccessibleOpen => isAccessibleOpen;
+        public virtual bool IsAccessibleOpen => isAccessibleOpen;
         protected bool isAccessibleClose;
-        public bool IsAccessibleClose => isAccessibleClose;
+        public virtual bool IsAccessibleClose => isAccessibleClose;
         protected bool isDamagableOpen;
-        public bool IsDamagableOpen => isDamagableOpen;
+        public virtual bool IsDamagableOpen => isDamagableOpen;
         protected bool isDamagableClose;
-        public bool IsDamagableClose => isDamagableClose;
+        public virtual bool IsDamagableClose => isDamagableClose;
         public BaseWallController(TileType type)
         {
             this.type = type;
-        }
-        protected virtual void OnchangeOpenCloseEye(PlayerState arg1)
-        {
         }
     }
 }

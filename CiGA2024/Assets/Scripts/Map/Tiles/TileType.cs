@@ -8,4 +8,5 @@ public enum TileType
     DontRemoveWall,
     Exit,
     SpawnPoint,
+    TimeLimitedWall,
 }

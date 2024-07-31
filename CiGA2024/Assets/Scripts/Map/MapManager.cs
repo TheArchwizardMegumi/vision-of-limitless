@@ -10,25 +10,38 @@ namespace UnderCloud
 {
     public class MapManager : Singleton<MapManager>
     {
+        public static Sprite[] timeLimitedWallSprites = new Sprite[3];
         private static Dictionary<Vector2Int, BaseWallController> tiles;
-        private static Vector3[] spawnPoint = new Vector3[2];
+        private static readonly Vector3[] spawnPoints = new Vector3[2];
+        private static List<Vector3> timeLimitedWalls = new();
         public MapManager()
         {
             tiles ??= new Dictionary<Vector2Int, BaseWallController>();
             GlobalData.TransformWallLayerNum = 0;
+
+        }
+        private void Start()
+        {
+            timeLimitedWallSprites[0] = Sprite.Create(Resources.Load<Texture2D>("Texures/Tile/DamageWall"), new Rect(0f, 0f, 287f, 287f), new Vector2(0.5f, 0.5f), 287f);
+            timeLimitedWallSprites[1] = Sprite.Create(Resources.Load<Texture2D>("Texures/Tile/DamageWall"), new Rect(0f, 0f, 287f, 287f), new Vector2(0.5f, 0.5f), 287f);
+            timeLimitedWallSprites[2] = Sprite.Create(Resources.Load<Texture2D>("Texures/Tile/FantasyDamageWall"), new Rect(0f, 0f, 287f, 287f), new Vector2(0.5f, 0.5f), 287f);
         }
         public static void InitWhenLevelStart()
         {
             tiles ??= new Dictionary<Vector2Int, BaseWallController>();
             GlobalData.TransformWallLayerNum = 0;
-            spawnPoint[0] = Vector3.zero;
-            spawnPoint[1] = Vector3.zero;
+            spawnPoints[0] = Vector3.zero;
+            spawnPoints[1] = Vector3.zero;
+            timeLimitedWalls = new();
 
             LoadMapOfCurrentLevel();
-            PlayControl.SpawnPlayer(spawnPoint[0]);
+
+            TimeLimitedWall.StackCount = 0;
+
+            PlayControl.SpawnPlayer(spawnPoints[0]);
             if (FindObjectOfType<LevelInfo>().Chapter == 2)
             {
-                Player2.SpawnPlayer(spawnPoint[1]);
+                Player2.SpawnPlayer(spawnPoints[1]);
             }
             else
             {
@@ -104,9 +117,11 @@ namespace UnderCloud
         {
             tiles ??= new Dictionary<Vector2Int, BaseWallController>();
             tiles.Clear();
-            for (int i = 0; i < spawnPoint.Length; i++)
+            timeLimitedWalls.Clear();
+
+            for (int i = 0; i < spawnPoints.Length; i++)
             {
-                spawnPoint[i] = Vector3.zero;
+                spawnPoints[i] = Vector3.zero;
             }
 
             TileBase tile;
@@ -132,16 +147,7 @@ namespace UnderCloud
                                 {
                                     if (tile is CustomRuleTile customTile)
                                     {
-                                        if (!tiles.ContainsKey(new Vector2Int(i, j)))
-                                        {
-                                            tiles.Add(new Vector2Int(i, j), GenerateTile(customTile.type));
-                                        }
-                                        if (customTile.type == TileType.SpawnPoint)
-                                        {
-                                            spawnPoint[SPCount] = new Vector3(i, j, 0);
-                                            SPCount++;
-                                        }
-                                        //map.SetTransformMatrix(new Vector3Int(i, j, 0), Matrix4x4.TRS(new Vector3(i, j, j * 1f), Quaternion.identity, Vector3.one));
+                                        SPCount = CheckTile(SPCount, i, j, customTile);
                                     }
                                 }
                             }
@@ -152,6 +158,24 @@ namespace UnderCloud
                         Debug.LogError($"Map�ĵ�{c}��������û��Tilemap���");
                     }
                 }
+            }
+
+            static int CheckTile(int SPCount, int i, int j, CustomRuleTile customTile)
+            {
+                if (!tiles.ContainsKey(new Vector2Int(i, j)))
+                {
+                    tiles.Add(new Vector2Int(i, j), GenerateTile(customTile.type));
+                }
+                if (customTile.type == TileType.SpawnPoint)
+                {
+                    spawnPoints[SPCount] = new Vector3(i, j, 0);
+                    SPCount++;
+                }
+                else if (customTile.type == TileType.TimeLimitedWall)
+                {
+                    timeLimitedWalls.Add(new Vector3(i, j));
+                }
+                return SPCount;
             }
         }
         public static void UpdateMap(MapUpdate update)
@@ -172,6 +196,28 @@ namespace UnderCloud
                 LoadMapOfCurrentLevel();
             }
         }
+        public static void CountTimeLimitedWall(PlayerState playerState)
+        {
+            if (playerState == PlayerState.Open)
+            {
+                TimeLimitedWall.StackCount++;
+                Tilemap map = GameObject.FindWithTag("TileMap").transform.GetChild(2).GetComponent<Tilemap>();
+                if (map != null)
+                {
+                    for (int i = 0; i < timeLimitedWalls.Count; i++)
+                    {
+                        Vector3Int pos = new((int)timeLimitedWalls[i].x, (int)timeLimitedWalls[i].y, 0);
+                        CustomRuleTile newTile = new()
+                        {
+                            type = TileType.TimeLimitedWall,
+                            m_DefaultSprite = timeLimitedWallSprites[TimeLimitedWall.StackCount - 1],
+                        };
+                        map.SetTile(pos, null);
+                        map.SetTile(pos, newTile);
+                    }
+                }
+            }
+        }
         private static BaseWallController GenerateTile(TileType type)
         {
             return type switch
@@ -184,8 +230,9 @@ namespace UnderCloud
                 TileType.TransformWall => new TransformWallController(),
                 TileType.SpawnPoint => new SpawnPoint(),
                 TileType.Exit => new Exit(),
+                TileType.TimeLimitedWall => new TimeLimitedWall(),
                 _ => null,
-            };
+            }; ;
         }
     }
 }
