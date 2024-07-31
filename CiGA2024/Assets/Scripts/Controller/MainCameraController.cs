@@ -19,9 +19,12 @@ public class MainCameraController : MonoBehaviour
         GameObject[] pls = GameObject.FindGameObjectsWithTag("Player");
         if (pls.Length > 0)
         {
-            if (pls[0].activeSelf && pls[1].activeSelf)
+            if (pls.Length > 1)
             {
-                SwitchState(CameraState.Center);
+                if (pls[0].activeSelf && pls[1].activeSelf)
+                {
+                    SwitchState(CameraState.Center);
+                }
             }
             else
             {
