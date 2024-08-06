@@ -41,8 +41,9 @@ public class Player2: MonoBehaviour
     public float backSmoothTime;
     public float distance;
     public SortingGroup sortingGroup;
-    [Header("睁眼闭眼")]
-    public PlayerState isOpenEye = PlayerState.Open;
+    public PlayerState isOpenEye => BlinkChecker.Instance.isOpenEye;
+    public bool IsBlinking => BlinkChecker.Instance.isBlinking;
+    public bool EyeOpening => BlinkChecker.Instance.eyeOpening;
     public float blinkTime = 0.5f;
     public bool eyeOpening;
     [Header("人物受伤")]
@@ -90,7 +91,6 @@ public class Player2: MonoBehaviour
         touchLeftWall = false;
         touchRightWall = false;
         touchDownWall = false;
-        isOpenEye = PlayerState.Open;
         anim.SetTrigger("Revive");
         velocity = Vector3.zero;
     }
