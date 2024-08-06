@@ -45,7 +45,6 @@ public class Player2: MonoBehaviour
     public PlayerState isOpenEye = PlayerState.Open;
     public float blinkTime = 0.5f;
     public bool eyeOpening;
-    bool isBlinking = false;
     [Header("人物受伤")]
     public bool isHurt;
     public bool isDead;
@@ -277,12 +276,6 @@ public class Player2: MonoBehaviour
         transform.position = new Vector3(200 ,200 , 0);
         position = transform.position;
         yield return null;
-    }
-
-    IEnumerator Blinking()
-    {
-        yield return new WaitForSeconds(blinkTime);
-        isBlinking = false;
     }
 
     public void Timer()
