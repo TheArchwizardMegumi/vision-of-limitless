@@ -76,13 +76,19 @@ namespace UnderCloud
 
         public static bool IsPlayer(Vector2Int position)
         {
-            if ((int)PlayControl.Instance.position.x == position.x && (int)PlayControl.Instance.position.y == position.y)
+            if(PlayControl.Instance.isActiveAndEnabled)
             {
-                return true;
+                if ((int)PlayControl.Instance.position.x == position.x && (int)PlayControl.Instance.position.y == position.y)
+                {
+                    return true;
+                }
             }
-            if ((int)Player2.Instance.position.x == position.x && (int)Player2.Instance.position.y == position.y)
+            if (Player2.Instance.isActiveAndEnabled)
             {
-                return true;
+                if ((int)Player2.Instance.position.x == position.x && (int)Player2.Instance.position.y == position.y)
+                {
+                    return true;
+                }
             }
             return false;
         }
