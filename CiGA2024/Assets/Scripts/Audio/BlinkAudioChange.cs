@@ -10,12 +10,14 @@ public class BlinkAudioChange : MonoBehaviour
     public AudioSource closeEyeBGS;
     public AudioSource hurtAudio;
     public AudioSource winAudio;
+    public AudioSource playerEnterExitAudio;
 
     void Start()
     {
         Messenger.AddListener<PlayerState>(MsgType.changeOpenCloseEye, ChangeBlinkAudio);
         Messenger.AddListener(MsgType.playerHurt, HurtAudio);
         Messenger.AddListener(MsgType.reachExit, WinAudio);
+        // 缺少一个调动的消息
     }
 
     void ChangeBlinkAudio(PlayerState state)
@@ -42,5 +44,10 @@ public class BlinkAudioChange : MonoBehaviour
     void WinAudio()
     {
         winAudio.Play();
+    }
+
+    void EnterExitAudio()
+    {
+        playerEnterExitAudio.Play();
     }
 }
