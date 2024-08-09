@@ -22,9 +22,9 @@ namespace UnderCloud
         }
         private void Start()
         {
-            timeLimitedWallSprites[0] = Sprite.Create(Resources.Load<Texture2D>("Texures/Tile/DamageWall"), new Rect(0f, 0f, 287f, 287f), new Vector2(0.5f, 0.5f), 287f);
-            timeLimitedWallSprites[1] = Sprite.Create(Resources.Load<Texture2D>("Texures/Tile/DamageWall"), new Rect(0f, 0f, 287f, 287f), new Vector2(0.5f, 0.5f), 287f);
-            timeLimitedWallSprites[2] = Sprite.Create(Resources.Load<Texture2D>("Texures/Tile/FantasyDamageWall"), new Rect(0f, 0f, 287f, 287f), new Vector2(0.5f, 0.5f), 287f);
+            timeLimitedWallSprites[0] = Sprite.Create(Resources.Load<Texture2D>("Texures/Tile/TimeLimitedWall_1"), new Rect(0f, 0f, 287f, 287f), new Vector2(0.5f, 0.5f), 287f);
+            timeLimitedWallSprites[1] = Sprite.Create(Resources.Load<Texture2D>("Texures/Tile/TimeLimitedWall_2"), new Rect(0f, 0f, 287f, 287f), new Vector2(0.5f, 0.5f), 287f);
+            timeLimitedWallSprites[2] = Sprite.Create(Resources.Load<Texture2D>("Texures/Tile/TimeLimitedWall_3"), new Rect(0f, 0f, 287f, 287f), new Vector2(0.5f, 0.5f), 287f);
         }
         public static void InitWhenLevelStart()
         {

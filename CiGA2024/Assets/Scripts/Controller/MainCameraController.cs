@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using UnityEngine;
 
 public class MainCameraController : MonoBehaviour
@@ -16,20 +17,20 @@ public class MainCameraController : MonoBehaviour
 
     public void InitCameraState()
     {
-        GameObject[] pls = GameObject.FindGameObjectsWithTag("Player");
-        if (pls.Length > 0)
+        if (PlayControl.Instance.isActiveAndEnabled)
         {
-            if (pls.Length > 1)
+            if (Player2.Instance.isActiveAndEnabled)
             {
-                if (pls[0].activeSelf && pls[1].activeSelf)
-                {
-                    SwitchState(CameraState.Center);
-                }
+                SwitchState(CameraState.Center);
             }
             else
             {
                 SwitchState(CameraState.FollowP1);
             }
+        }
+        else if (Player2.Instance.isActiveAndEnabled)
+        {
+            SwitchState(CameraState.FollowP2);
         }
         else
         {
@@ -45,23 +46,31 @@ public class MainCameraController : MonoBehaviour
                 {
                     SwitchState(CameraState.FollowP1);
                 }
+                if (!PlayControl.Instance.isActiveAndEnabled)
+                {
+                    SwitchState(CameraState.FollowP2);
+                }
                 transform.position = (PlayControl.Instance.transform.position + Player2.Instance.transform.position) / 2 + new Vector3(0, 0, -10);
                 break;
             case CameraState.FollowP1:
-                if (PlayControl.Instance.isActiveAndEnabled)
-                {
-                    transform.position = new Vector3(PlayControl.Instance.transform.position.x, PlayControl.Instance.transform.position.y, -10);
-                }
-                else
-                    SwitchState(CameraState.FollowP2);
-                break;
-            case CameraState.FollowP2:
                 if (Player2.Instance.isActiveAndEnabled)
                 {
-                    transform.position = new Vector3(Player2.Instance.transform.position.x, Player2.Instance.transform.position.y, -10);
+                    SwitchState(CameraState.Center);
                 }
+                else if (PlayControl.Instance.isActiveAndEnabled)
+                    transform.position = new Vector3(PlayControl.Instance.transform.position.x, PlayControl.Instance.transform.position.y, -10);
                 else
-                    SwitchState(CameraState.FollowP1);
+                    SwitchState(CameraState.Default);
+                break;
+            case CameraState.FollowP2:
+                if (PlayControl.Instance.isActiveAndEnabled)
+                {
+                    SwitchState(CameraState.Center);
+                }
+                else if (Player2.Instance.isActiveAndEnabled)
+                    transform.position = new Vector3(Player2.Instance.transform.position.x, Player2.Instance.transform.position.y, -10);
+                else
+                    SwitchState(CameraState.Default);
                 break;
             case CameraState.Default:
                 transform.position = new Vector3 (0, 0, -10);
@@ -73,16 +82,11 @@ public class MainCameraController : MonoBehaviour
         switch (state)
         {
             case CameraState.Center:
-                GameObject[] pls = GameObject.FindGameObjectsWithTag("Player");
-                if (pls.Length < 2)
-                {
-                    Debug.LogError("Player number less than 2");
-                }
-                else
-                {
-                    transform.SetParent(null);
-                    this.state = CameraState.Center;
-                }
+                this.state = CameraState.Center;
+                if (!PlayControl.Instance.isActiveAndEnabled)
+                    SwitchState(CameraState.FollowP2);
+                if (!Player2.Instance.isActiveAndEnabled)
+                    SwitchState(CameraState.FollowP1);
                 break;
             case CameraState.FollowP1:
                 if (PlayControl.Instance)
