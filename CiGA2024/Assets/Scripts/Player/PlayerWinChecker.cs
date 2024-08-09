@@ -40,13 +40,5 @@ public static class PlayerWinChecker
     {
         GameObject effect = (GameObject)Object.Instantiate(Resources.Load("Prefabs/WinEffect"));
         effect.transform.position = new Vector3(position.x, position.y, 0);
-        if (effect.TryGetComponent(out WinEffect comp))
-        {
-            comp.PlayEffect();
-        }
-        else
-        {
-            Debug.Log("Component not found");
-        }
     }
 }

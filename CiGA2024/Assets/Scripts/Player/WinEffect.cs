@@ -5,17 +5,15 @@ using UnityEngine;
 public class WinEffect : MonoBehaviour
 {
     private Animator animator;
+    public AudioSource se;
     private void Awake()
     {
         animator = GetComponent<Animator>();
+        StartCoroutine(PlayEffect());
     }
-    public void PlayEffect()
+    private IEnumerator PlayEffect()
     {
-        StartCoroutine(PE());
-    }
-
-    private IEnumerator PE()
-    {
+        se.Play();
         animator.SetTrigger("Play");
         yield return new WaitForSeconds(0.6f);
         Destroy(gameObject);
