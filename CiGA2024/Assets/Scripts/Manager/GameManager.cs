@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : Singleton<GameManager>
 {
-    public static string[] levelName = new string[12]
+    public static string[] levelName = new string[25]
     {
         "Level0",
         "Level1",
@@ -22,6 +22,19 @@ public class GameManager : Singleton<GameManager>
         "Level9",
         "Level10",
         "Level11",
+        "Level12",
+        "Level13",
+        "Level14",
+        "Level15",
+        "Level16",
+        "Level17",
+        "Level18",
+        "Level19",
+        "Level20",
+        "Level21",
+        "Level22",
+        "Level23",
+        "Level24",
     };
     public int currentLevelIndex;
 
