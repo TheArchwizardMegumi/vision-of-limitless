@@ -56,11 +56,6 @@ public class GameManager : Singleton<GameManager>
         currentLevelIndex = PlayerPrefs.GetInt("currentLevelIndex", 0);
     }
 
-    void Update()
-    {
-        
-    }
-
     public static void LoadLevel(int index)
     {
         if (!SceneManager.GetSceneByName("Player").isLoaded)
@@ -83,6 +78,11 @@ public class GameManager : Singleton<GameManager>
         }
         AsyncOperation operation = SceneManager.LoadSceneAsync(name, LoadSceneMode.Additive);
         yield return operation;
+        while (IsMultipleScenesLoaded(name))
+        {
+            operation = SceneManager.UnloadSceneAsync(name);
+            yield return operation;
+        }
         foreach (string sceneName in levelName)
         {
             if (sceneName == name)
@@ -92,6 +92,20 @@ public class GameManager : Singleton<GameManager>
             }
         }
     }
+    public static bool IsMultipleScenesLoaded(string sceneName)
+    {
+        int sceneCount = 0;
+        for (int i = 0; i < SceneManager.sceneCount; i++)
+        {
+            Scene scene = SceneManager.GetSceneAt(i);
+            if (scene.name == sceneName)
+            {
+                sceneCount++;
+            }
+        }
+        return sceneCount > 1;
+    }
+
     public void UnloadScene(string name)
     {
         Debug.Log($"Unloading {name}");
