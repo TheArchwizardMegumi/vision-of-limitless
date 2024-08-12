@@ -44,6 +44,7 @@ public class BlinkAudioChange : MonoBehaviour
     void WinAudio()
     {
         winAudio.Play();
+        ChangeBlinkAudio(PlayerState.Open);
     }
 
     void EnterExitAudio()
