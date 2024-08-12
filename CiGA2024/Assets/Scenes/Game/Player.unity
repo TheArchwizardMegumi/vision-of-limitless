@@ -180,7 +180,8 @@ MonoBehaviour:
   position: {x: 0, y: 0, z: 0}
   isWalk: 0
   walking: 0
-  timer: 120
+  isWalking: 0
+  timer: 14
   time: 0
   touchWall: 0
   touchUpWall: 0
@@ -285,7 +286,7 @@ SortingGroup:
   m_GameObject: {fileID: 1185308384}
   m_Enabled: 1
   m_SortingLayerID: 1480895557
-  m_SortingLayer: 2
+  m_SortingLayer: 1
   m_SortingOrder: 10
 --- !u!1001 &1290478828
 PrefabInstance:
@@ -340,7 +341,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5794453805006094022, guid: 6f1e02bd2c2a68546a0792df1159a351, type: 3}
       propertyPath: timer
-      value: 120
+      value: 14
       objectReference: {fileID: 0}
     - target: {fileID: 5794453805006094025, guid: 6f1e02bd2c2a68546a0792df1159a351, type: 3}
       propertyPath: m_Name

@@ -6,6 +6,7 @@ using System;
 using UnityEngine.SceneManagement;
 using UnityEngine.Rendering;
 using Unity.VisualScripting;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class Player2: MonoBehaviour
 {
@@ -17,6 +18,7 @@ public class Player2: MonoBehaviour
     public Vector3 position;
     public bool isWalk;
     public bool walking;
+    public bool isWalking;
     Vector2 dir;
     [Header("撞墙相关")]
     public int timer = 80;
@@ -55,7 +57,6 @@ public class Player2: MonoBehaviour
     [Header("音乐相关")]
     public AudioSource walk;
     public AudioSource hitWall;
-
     private void Awake()
     {
         Instance = this;
@@ -64,16 +65,16 @@ public class Player2: MonoBehaviour
     private void FixedUpdate()
     {
         TouchWallEffect();
-        if (eyeOpening == false)
+        if (EyeOpening == false)
         {
             sortingGroup.sortingLayerName = "Player";
         }
+        WalkTimer();
     }
     private void Update()
     {
         CheckWin();
         Timer();
-        WalkTimer();
         Move();
         IsStuckInWall();
         ControlCheck();
@@ -180,10 +181,7 @@ public class Player2: MonoBehaviour
                 }
                 if (touchDownWall == true || downBesidePlayer == true && downBesidePlayerTouchWall == true)
                 {
-                    if (eyeOpening == true)
-                    {
-                        sortingGroup.sortingLayerName = "CrashLayer";
-                    }
+                    sortingGroup.sortingLayerName = "CrashLayer";
                     if (MapManager.IsDamagable(new Vector2Int((int)position.x, (int)position.y - 1), isOpenEye))
                     {
                         PlayerDie();
@@ -317,6 +315,7 @@ public class Player2: MonoBehaviour
                 time = 0;
             }
         }
-
     }
+
+
 }

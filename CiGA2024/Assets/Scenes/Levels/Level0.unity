@@ -1183,6 +1183,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1240014725}
   - component: {fileID: 1240014724}
+  - component: {fileID: 1240014726}
   m_Layer: 0
   m_Name: BG
   m_TagString: Untagged
@@ -1257,6 +1258,17 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!210 &1240014726
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1240014723}
+  m_Enabled: 1
+  m_SortingLayerID: 525082471
+  m_SortingLayer: -1
+  m_SortingOrder: 10
 --- !u!1 &1244755180
 GameObject:
   m_ObjectHideFlags: 0
