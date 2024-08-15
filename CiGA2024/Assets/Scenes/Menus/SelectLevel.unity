@@ -2185,6 +2185,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: EventSystem (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 7745139014867777167, guid: 66746c0b47c564b4992b95e76b562c92, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7745139014867777170, guid: 66746c0b47c564b4992b95e76b562c92, type: 3}
       propertyPath: m_RootOrder
       value: 1
