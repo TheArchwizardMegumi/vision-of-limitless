@@ -42,8 +42,6 @@ public class Player2: MonoBehaviour
     public float distance;
     public SortingGroup sortingGroup;
     public PlayerState isOpenEye => BlinkChecker.Instance.isOpenEye;
-    public bool IsBlinking => BlinkChecker.Instance.isBlinking;
-    public bool EyeOpening => BlinkChecker.Instance.eyeOpening;
     public float blinkTime = 0.5f;
     public bool eyeOpening;
     [Header("人物受伤")]
