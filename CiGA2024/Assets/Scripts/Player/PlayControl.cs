@@ -6,6 +6,7 @@ using System;
 using UnityEngine.SceneManagement;
 using UnityEngine.Rendering;
 using Unity.VisualScripting;
+using System.Diagnostics;
 
 public class PlayControl : MonoBehaviour
 {
@@ -45,7 +46,7 @@ public class PlayControl : MonoBehaviour
     public SortingGroup sortingGroup;
     public PlayerState IsOpenEye => BlinkChecker.Instance.isOpenEye;
     public bool IsBlinking => BlinkChecker.Instance.isBlinking;
-    public bool EyeOpening => BlinkChecker.Instance.eyeOpening;
+    public bool EyeOpening => BlinkChecker.Instance.eyeOpening = true;
     [Header("人物受伤")]
     public bool isHurt;
     public bool isDead;
@@ -62,10 +63,12 @@ public class PlayControl : MonoBehaviour
     }
     private void FixedUpdate()
     {
+        
         TouchWallEffect();
         if (EyeOpening == false)
         {
             sortingGroup.sortingLayerName = "Player";
+            print("EyeOpening == false");
         }
         WalkTimer();
 
