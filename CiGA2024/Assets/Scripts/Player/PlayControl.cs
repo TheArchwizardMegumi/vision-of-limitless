@@ -46,7 +46,7 @@ public class PlayControl : MonoBehaviour
     public SortingGroup sortingGroup;
     public PlayerState IsOpenEye => BlinkChecker.Instance.isOpenEye;
     public bool IsBlinking => BlinkChecker.Instance.isBlinking;
-    public bool EyeOpening => BlinkChecker.Instance.eyeOpening = true;
+    public bool EyeOpening => BlinkChecker.Instance.EyeOpening;
     [Header("人物受伤")]
     public bool isHurt;
     public bool isDead;
