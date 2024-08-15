@@ -39,6 +39,7 @@ public class MainCameraController : MonoBehaviour
     }
     void Update()
     {
+        Vector3 target;
         switch (state)
         {
             case CameraState.Center:
@@ -50,7 +51,8 @@ public class MainCameraController : MonoBehaviour
                 {
                     SwitchState(CameraState.FollowP2);
                 }
-                transform.position = (PlayControl.Instance.transform.position + Player2.Instance.transform.position) / 2 + new Vector3(0, 0, -10);
+                target = (PlayControl.Instance.transform.position + Player2.Instance.transform.position) / 2 + new Vector3(0, 0, -10);
+                transform.position = Vector3.Lerp(transform.position, target, 0.02f);
                 break;
             case CameraState.FollowP1:
                 if (Player2.Instance.isActiveAndEnabled)
@@ -58,7 +60,10 @@ public class MainCameraController : MonoBehaviour
                     SwitchState(CameraState.Center);
                 }
                 else if (PlayControl.Instance.isActiveAndEnabled)
-                    transform.position = new Vector3(PlayControl.Instance.transform.position.x, PlayControl.Instance.transform.position.y, -10);
+                {
+                    target = new Vector3(PlayControl.Instance.transform.position.x, PlayControl.Instance.transform.position.y, -10);
+                    transform.position = Vector3.Lerp(transform.position, target, 0.02f);
+                }
                 else
                     SwitchState(CameraState.Default);
                 break;
@@ -68,7 +73,11 @@ public class MainCameraController : MonoBehaviour
                     SwitchState(CameraState.Center);
                 }
                 else if (Player2.Instance.isActiveAndEnabled)
-                    transform.position = new Vector3(Player2.Instance.transform.position.x, Player2.Instance.transform.position.y, -10);
+                {
+
+                    target = new Vector3(Player2.Instance.transform.position.x, Player2.Instance.transform.position.y, -10);
+                    transform.position = Vector3.Lerp(transform.position, target, 0.02f);
+                }
                 else
                     SwitchState(CameraState.Default);
                 break;
