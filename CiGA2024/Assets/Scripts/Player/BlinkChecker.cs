@@ -7,7 +7,7 @@ public class BlinkChecker : Singleton<BlinkChecker>
     [Header("ÕöÑÛ±ÕÑÛ")]
     public PlayerState isOpenEye = PlayerState.Open;
     public float blinkTime = 0.5f;
-    public bool eyeOpening;
+    public bool EyeOpening => isOpenEye == PlayerState.Open;
     public bool isBlinking = false;
     public bool canBlink;
     public void Start()
@@ -31,7 +31,6 @@ public class BlinkChecker : Singleton<BlinkChecker>
     private void ChangeEyeState()
     {
         isOpenEye = isOpenEye == PlayerState.Open ? PlayerState.Close : PlayerState.Open;
-        eyeOpening = isOpenEye == PlayerState.Open;
         Messenger.Broadcast<PlayerState>(MsgType.changeOpenCloseEye, isOpenEye);
     }
     IEnumerator Blinking()
