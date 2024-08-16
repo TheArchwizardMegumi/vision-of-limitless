@@ -2189,7 +2189,7 @@ Tilemap:
   - m_RefCount: 18
     m_Data: {fileID: 2027493362, guid: da9997bd5ce79944eaa2c4e4ed070466, type: 3}
   - m_RefCount: 1
-    m_Data: {fileID: -164962723, guid: da9997bd5ce79944eaa2c4e4ed070466, type: 3}
+    m_Data: {fileID: -378950857, guid: ebd8eaaa89e2b504fbd7b3c1c0467591, type: 3}
   - m_RefCount: 1
     m_Data: {fileID: 1083391933, guid: 54e4cffa112860d468439feee96219f6, type: 3}
   - m_RefCount: 2
@@ -2727,9 +2727,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: -10
+  m_SortingLayerID: 525082471
+  m_SortingLayer: -2
+  m_SortingOrder: 10
   m_Sprite: {fileID: 21300000, guid: 84889e10871e54f44b2d9bc0c34f3952, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
