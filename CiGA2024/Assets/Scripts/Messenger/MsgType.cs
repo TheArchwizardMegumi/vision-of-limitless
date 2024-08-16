@@ -7,6 +7,8 @@ public static class MsgType
 
     public static string GameOver = nameof(GameOver);
     public static string GameWin = nameof(GameWin);
+    public static string Walking = nameof(Walking);
+    public static string Walking2 = nameof(Walking2);
 
     /// <summary>
     /// �л����۱���ʱ�������¼�
