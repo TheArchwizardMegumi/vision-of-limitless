@@ -6,6 +6,7 @@ using System;
 using UnityEngine.SceneManagement;
 using UnityEngine.Rendering;
 using Unity.VisualScripting;
+using System.Diagnostics;
 
 public class PlayControl : MonoBehaviour
 {
@@ -55,7 +56,6 @@ public class PlayControl : MonoBehaviour
     [Header("音乐相关")]
     public AudioSource walk;
     public AudioSource hitWall;
-
     private void Awake()
     {
         Instance = this;
@@ -63,12 +63,19 @@ public class PlayControl : MonoBehaviour
     }
     private void FixedUpdate()
     {
+        
         TouchWallEffect();
+        if (EyeOpening == false)
+        {
+            sortingGroup.sortingLayerName = "Player";
+            print("EyeOpening == false");
+        }
+        WalkTimer();
+
     }
     private void Update()
     {
         CheckWin();
-        WalkTimer();
         Timer();
         Move();
         IsStuckInWall();
@@ -176,10 +183,7 @@ public class PlayControl : MonoBehaviour
                 }
                 if (touchDownWall == true || downBesidePlayer == true && downBesidePlayerTouchWall == true)
                 {
-                    if (EyeOpening == true)
-                    {
-                        sortingGroup.sortingLayerName = "CrashLayer";
-                    }
+                    sortingGroup.sortingLayerName = "CrashLayer";
                     if (MapManager.IsDamagable(new Vector2Int((int)position.x, (int)position.y - 1), IsOpenEye))
                     {
                         PlayerDie();
@@ -207,7 +211,6 @@ public class PlayControl : MonoBehaviour
                     crashWall = true;
                     walking = true;
                     transform.position = Vector3.SmoothDamp(transform.position, backLeftPosition, ref velocity, backSmoothTime);
-
                 }
             }
             if (Input.GetKeyDown(KeyCode.D))
