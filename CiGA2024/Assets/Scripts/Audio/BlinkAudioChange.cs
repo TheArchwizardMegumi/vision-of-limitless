@@ -17,7 +17,6 @@ public class BlinkAudioChange : MonoBehaviour
         Messenger.AddListener<PlayerState>(MsgType.changeOpenCloseEye, ChangeBlinkAudio);
         Messenger.AddListener(MsgType.playerHurt, HurtAudio);
         Messenger.AddListener(MsgType.reachExit, WinAudio);
-        // 缺少一个调动的消息
     }
 
     void ChangeBlinkAudio(PlayerState state)
@@ -44,7 +43,9 @@ public class BlinkAudioChange : MonoBehaviour
     void WinAudio()
     {
         winAudio.Play();
-        ChangeBlinkAudio(PlayerState.Open);
+        // ChangeBlinkAudio(PlayerState.Open);
+        openEyeAudio.volume = 1;
+        closeEyeAudio.volume = 0;
     }
 
     void EnterExitAudio()

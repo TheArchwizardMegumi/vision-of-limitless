@@ -7,7 +7,7 @@ public class Win : MonoBehaviour
 {
     public void LoadMenu()
     {
-        SceneManager.LoadScene("MainMenu");
+        GameManager.Instance.UnloadScene("Win");
         GameManager.Instance.currentLevelIndex = 0;
     }
 }

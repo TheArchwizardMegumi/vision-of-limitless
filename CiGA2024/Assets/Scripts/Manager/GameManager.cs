@@ -133,8 +133,8 @@ public class GameManager : Singleton<GameManager>
         if (currentLevelIndex >= levelName.Length - 1)
         {
             Debug.Log("No more levels");
+            SceneManager.LoadSceneAsync("MainMenu");
             SceneManager.LoadSceneAsync("Win", LoadSceneMode.Additive);
-            SceneManager.UnloadSceneAsync(levelName[currentLevelIndex]);
             return;
         }
         currentLevelIndex = PlayerPrefs.GetInt("currentLevelIndex", 0);
