@@ -271,8 +271,6 @@ public class Player2: MonoBehaviour
         isHurt = true;
         yield return new WaitForSeconds(1.5f);
         Messenger.Broadcast(MsgType.playerHurt);
-        transform.position = new Vector3(200 ,200 , 0);
-        position = transform.position;
         yield return null;
     }
 
